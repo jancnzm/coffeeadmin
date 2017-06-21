@@ -1,0 +1,150 @@
+<script>
+    $(document).ready(function(){
+
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+
+
+        if($('#enable').val()== null || $('#enable').val()== '0' ){
+            $('#enablecheck').iCheck('check');
+        }else{
+            $('#enablecheck').iCheck('uncheck');
+        }
+            $('#enablecheck').on('ifChecked',function(event){
+                $('#enable').val(1);
+            });
+        $('#enablecheck').on('ifUnchecked',function(event){
+            $('#enable').val(0);
+        });
+
+        if($('#once').val()== null || $('#once').val()== '0' ){
+            $('#oncecheck').iCheck('check');
+        }else{
+            $('#oncecheck').iCheck('uncheck');
+        }
+        $('#oncecheck').on('ifChecked',function(event){
+            $('#once').val(1);
+        });
+        $('#oncecheck').on('ifUnchecked',function(event){
+            $('#once').val(0);
+        });
+
+        $('#buyproductselect').change(function(){
+            $('#buyproductid').val($(this).val());
+        });
+
+        if($('#buyproductid').val()!=''){
+            $('#buyproductselect').val($('#buyproductid').val());
+        }
+
+
+
+
+        $('#smt').click(function(){
+            if (elem.checked){
+                $('#status').val('1');
+            }else
+            {
+                $('#status').val('0');
+            }
+
+        });
+        $("#data_1 .input-group.date").datepicker({todayBtn:"linked",keyboardNavigation:!1,forceParse:!1,calendarWeeks:!0,autoclose:!0});
+        $("#data_2 .input-group.date").datepicker({todayBtn:"linked",keyboardNavigation:!1,forceParse:!1,calendarWeeks:!0,autoclose:!0});
+
+    });
+
+</script>
+<div class="col-md-12 ibox ibox-content">
+  <div class="ibox-content form-horizontal m-t">
+    <div class="form-group">
+      <%= form_for(@giveaway,:html => {:class=>'form-horizontal m-t',:multipart => true}) do |f| %>
+
+          <div class="form-group">
+            <label class="col-sm-3 control-label">活动名称：</label>
+            <div class="col-sm-5">
+              <%= f.text_field :name,class:"form-control" %>
+            </div>
+          </div>
+          <div class="form-group">
+
+            <label class="col-sm-3 control-label">启用：</label>
+            <div class="col-sm-5">
+              <%= f.hidden_field :enable,class:"form-control", id:'enable' %>
+              <label>
+                <input type="checkbox" class="i-checks" id="enablecheck"></label>
+            </div>
+          </div>
+          <div class="form-group" id="data_1">
+            <label class="col-sm-3 control-label">开始时间：</label>
+
+              <div class="input-group date col-sm-5">
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                <%= f.text_field :begindate,class:"form-control" %>
+              </div>
+          </div>
+          <div class="form-group" id="data_2">
+            <label class="col-sm-3 control-label">结束时间：</label>
+
+            <div class="input-group date col-sm-5">
+              <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+              <%= f.text_field :enddate,class:"form-control" %>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">购买商品：</label>
+            <div class="col-sm-5">
+              <%= f.text_field :buyproduct_id,class:"form-control",id:'buyproductid' %>
+              <select class="form-control m-b" id="buyproductselect">
+                <option value=0></option>
+                <% @products.each do |product| %>
+                    <option value=<%= product.id %> ><%= product.name %></option>
+                <% end %>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">购买数量：</label>
+            <div class="col-sm-5">
+              <%= f.text_field :buynum,class:"form-control" %>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">赠送商品：</label>
+            <div class="col-sm-5">
+              <%= f.text_field :giveproduct_id,class:"form-control",id:'giveproductid' %>
+              <select class="form-control m-b" id="giveproductselect">
+                <option value=0></option>
+                <% @products.each do |product| %>
+                    <option value=<%= product.id %> ><%= product.name %></option>
+                <% end %>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">赠送数量：</label>
+            <div class="col-sm-5">
+              <%= f.text_field :givenum,class:"form-control" %>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">限购一次：</label>
+            <div class="col-sm-5">
+              <%= f.hidden_field :once,class:"form-control", id:'once' %>
+              <label>
+                <input type="checkbox" class="i-checks" id="oncecheck"></label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-3 control-label"></label>
+            <div class="col-sm-5 text-right">
+              <%= f.submit '确定',class: "btn btn-w-m btn-primary ",id:'smt' %>&nbsp;<%= link_to "返回",admins_path,class: "btn btn-w-m btn-primary " %>
+            </div>
+          </div>
+      <% end %>
+    </div>
+  </div>
+</div>

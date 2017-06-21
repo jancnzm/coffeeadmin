@@ -1,0 +1,61 @@
+<%= render 'layerbegin' %>
+<div class="col-lg-12">
+  <div class="ibox float-e-margins">
+    <div class="ibox-title">
+      <h3>资金明细</h3>
+    </div>
+    <div class="ibox-content">
+      <table class="table table-hover table-bordered text-center">
+        <thead>
+        <tr>
+          <th class="text-center">厂家</th>
+          <th class="text-center">入账金额</th>
+          <th class="text-center">状态</th>
+          <th class="text-center">时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% amountsum=0.0 %>
+        <% @dgtfees.each do |dgtfee| %>
+        <% amountsum+=dgtfee.amount %>
+            <tr>
+              <td>
+
+
+                <% @dgts.each do |dgt| %>
+                <% if dgt.id == dgtfee.dgt_id %>
+                    <%= dgt.name %>
+                        <% break %>
+                    <% end %>
+
+                <% end %>
+
+
+              </td>
+              <td><%= dgtfee.amount %></td>
+              <td>
+                <% if dgtfee.status == 0 %>
+                未到账
+                    <% else %>
+                已到账
+                <% end %>
+              </td>
+
+              <td><%= dgtfee.created_at.strftime('%Y-%m-%d %H:%M:%S') %></td>
+            </tr>
+        <% end %>
+        </tbody>
+      </table>
+
+      <div class="col-lg-12">
+        <span class="pull-right"><strong>
+        小计：<%= amountsum %>&nbsp;&nbsp;合计：<%= @dgtfeesum %>
+        </strong>
+            </span>
+      </div>
+
+      <br>
+    </div>
+  </div>
+</div>
+<%=render 'layerend' %>

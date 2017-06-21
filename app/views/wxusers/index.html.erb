@@ -1,0 +1,80 @@
+<%= render 'layerbegin' %>
+<div class="col-lg-12">
+  <div class="ibox float-e-margins">
+    <div class="ibox-title">
+      <h3>微信用户</h3>
+    </div>
+    <div class="ibox-content">
+      <table class="table table-hover table-bordered text-center">
+        <thead>
+        <tr>
+          <th class="text-center"></th>
+          <th class="text-center">昵称</th>
+          <th class="text-center">性别</th>
+          <th class="text-center">地址</th>
+          <th class="text-center">openid</th>
+          <th class="text-center">接收订单消息</th>
+          <th class="text-center">接收开票消息</th>
+          <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @wxusers.each do |wxuser| %>
+            <tr>
+              <td><img width="40" src=<%= wxuser.headimgurl %>></td>
+              <td style="padding-top:20px;"><%= wxuser.nickname %></td>
+              <td style="padding-top:20px;">
+                <% if wxuser.sex==1 %>
+                    男
+                <% else %>
+                    女
+                <% end %>
+
+              </td>
+              <td style="padding-top:20px;">
+                <%= wxuser.address %>
+              </td>
+              <td style="padding-top:20px;">
+                <%= wxuser.openid %>
+              </td>
+              <td style="padding-top:20px;">
+                <% if wxuser.dgt_id > 0 %>
+                    <% @dgts.each do |dgt| %>
+                        <% if dgt.id == wxuser.dgt_id %>
+                            <%= dgt.name %>
+                            <% break %>
+                        <% end %>
+                    <% end %>
+                <% else %>
+                    不接收
+                <% end %>
+
+              </td>
+              <td style="padding-top:20px;">
+<% if wxuser.receipt.to_i >0 %>
+                接收
+                    <% else %>
+                &nbsp;
+                    <% end %>
+              </td>
+
+
+
+
+
+
+
+
+
+              <td style="padding-top:20px;"><%= link_to '编辑',edit_wxuser_path(wxuser) %>
+              </td>
+            </tr>
+        <% end %>
+        </tbody>
+      </table>
+
+      <br>
+    </div>
+  </div>
+</div>
+<%=render 'layerend' %>

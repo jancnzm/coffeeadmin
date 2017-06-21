@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  busine_id: 1
+  user_id: 1
+  number: MyString
+  begindate: 2017-04-03 10:59:24
+  enddate: 2017-04-03 10:59:24
+  status: 1
+
+two:
+  busine_id: 1
+  user_id: 1
+  number: MyString
+  begindate: 2017-04-03 10:59:24
+  enddate: 2017-04-03 10:59:24
+  status: 1

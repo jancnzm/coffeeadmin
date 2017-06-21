@@ -1,0 +1,142 @@
+<script>
+    $(document).ready(function(){
+
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+
+        var elem = document.querySelector('.js-switch');
+        var init = new Switchery(elem);
+
+        if($('#status').val()==''){
+            $('#status').val('1');
+        }
+
+        if($('#status').val()=='1')
+        {
+            //$('.js-switch').prop('checked', true);
+            //$('.js-switch').attr('checked');
+            setSwitchery(init, true);
+
+        }else
+        {
+            //$('.js-switch').prop('checked', false);
+            setSwitchery(init, false);
+            //$('.js-switch').attr('unchecked');
+        }
+
+        function setSwitchery(switchElement, checkedBool) {
+            if((checkedBool && !switchElement.isChecked()) || (!checkedBool && switchElement.isChecked())) {
+                switchElement.setPosition(true);
+                switchElement.handleOnchange(true);
+            }
+        }
+
+        if($('#dgtid').val()==''){
+            $('#dgtid').val('0');
+        }
+
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "progressBar": false,
+            "positionClass": "toast-top-full-width",
+            "onclick": null,
+            "showDuration": "400",
+            "hideDuration": "1000",
+            "timeOut": "7000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+
+        $('#selectdgt').change(function(){
+            $('#dgtid').val($(this).val());
+        });
+
+        if($('#dgtid').val()!=''){
+            $('#selectdgt').val($('#dgtid').val());
+        }
+
+
+        $('#smt').click(function(){
+            if (elem.checked){
+                $('#status').val('1');
+            }else
+            {
+                $('#status').val('0');
+            }
+
+        });
+
+
+    });
+
+</script>
+<div class="col-md-12 ibox ibox-content">
+  <div class="ibox-content form-horizontal m-t">
+    <div class="form-group">
+      <%= form_for(@admin,:html => {:class=>'form-horizontal m-t',:multipart => true}) do |f| %>
+
+          <div class="form-group">
+            <label class="col-sm-3 control-label">姓名：</label>
+            <div class="col-sm-5">
+              <%= f.text_field :username,class:"form-control" %>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">账号：</label>
+            <div class="col-sm-5">
+              <% if @admin.id %>
+              <%= f.text_field :login,class:"form-control",'readonly':'true' %>
+                  <% else %>
+                  <%= f.text_field :login,class:"form-control" %>
+              <% end %>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">密码：</label>
+            <div class="col-sm-5">
+              <%= f.password_field :password,class:"form-control" %>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">确认密码：</label>
+            <div class="col-sm-5">
+              <%= f.password_field :password_confirmation,class:"form-control" %>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">隶属于：</label>
+            <div class="col-sm-5">
+              <%= f.hidden_field :dgt_id, id:'dgtid' %>
+              <select class="form-control m-b" id="selectdgt">
+                <option value=0>系统管理员</option>
+                <% @dgts.each do |dgt| %>
+                    <option value=<%= dgt.id %> ><%= dgt.name %></option>
+                <% end %>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">状态：</label>
+            <div class="col-sm-5">
+              <%= f.hidden_field :status,class:"form-control",id:'status' %>
+              <input type="checkbox" class="js-switch" checked />
+            </div>
+          </div>
+
+
+          <div class="form-group">
+            <label class="col-sm-3 control-label"></label>
+            <div class="col-sm-5 text-right">
+              <%= f.submit '确定',class: "btn btn-w-m btn-primary ",id:'smt' %>&nbsp;<%= link_to "返回",admins_path,class: "btn btn-w-m btn-primary " %>
+            </div>
+          </div>
+      <% end %>
+    </div>
+  </div>
+</div>

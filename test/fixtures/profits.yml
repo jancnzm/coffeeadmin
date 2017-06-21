@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  dgt: MyString
+  product: MyString
+  number: 1
+  profit: 1.5
+
+two:
+  dgt: MyString
+  product: MyString
+  number: 1
+  profit: 1.5

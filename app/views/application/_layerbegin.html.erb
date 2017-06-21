@@ -1,0 +1,219 @@
+<div id="wrapper">
+  <nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+      <ul class="nav" id="side-menu">
+        <li class="nav-header">
+          <div class="dropdown profile-element"> <span>
+                             </span>
+            <a data-toggle="dropdown" class="dropdown-toggle">
+                                <span class="clear">
+                                  <span class="block m-t-xs">
+                                    <strong class="font-bold"><%= session[:username] %></strong>
+                                   </span>
+                                  <span>当前管理员 </span>
+                                </span>
+            </a>
+            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+              <li class="divider"></li>
+              <li><%= link_to '退出' %>
+              </li>
+
+            </ul>
+          </div>
+          <div class="logo-element">
+            H+
+          </div>
+        </li>
+
+<% if session[:dgtid]==0 %>
+        <li>
+
+          <a href="">
+            <i class="fa fa-file"></i>
+
+            <span class="nav-label">产品</span>
+
+
+            <span class="fa arrow"></span>
+          </a>
+          <ul class="nav nav-second-level">
+            <li>
+
+              <%= link_to '产商',dgts_path,'data-no-turbolink'=>true%>
+            </li>
+            <li>
+              <%= link_to '产品' ,products_path,'data-no-turbolink'=>true%>
+            </li>
+          </ul>
+
+        </li>
+<% end %>
+
+        <li>
+
+
+          <a href="">
+            <i class="fa fa-bars"></i>
+            <span class="nav-label">订单</span>
+            <span class="fa arrow"></span>
+          </a>
+          <ul class="nav nav-second-level">
+            <li>
+
+              <%= link_to '订单',dgtorders_path,'data-no-turbolink'=>true%>
+              <%= link_to '资金明细',dgtfees_path,'data-no-turbolink'=>true%>
+            </li>
+          </ul>
+        </li>
+
+        <% if session[:dgtid]==0 %>
+            <li>
+
+              <a href="">
+                <i class="fa fa-file"></i>
+
+                <span class="nav-label">商家</span>
+
+
+                <span class="fa arrow"></span>
+              </a>
+              <ul class="nav nav-second-level">
+                <li>
+                  <%= link_to '商家' ,busines_path,'data-no-turbolink'=>true%>
+                </li>
+              </ul>
+
+            </li>
+        <% end %>
+
+        <% if session[:dgtid]==0 %>
+            <li>
+
+              <a href="">
+                <i class="fa fa-file"></i>
+
+                <span class="nav-label">合同</span>
+
+
+                <span class="fa arrow"></span>
+              </a>
+              <ul class="nav nav-second-level">
+                <li>
+                  <%= link_to '合同' ,pacts_path,'data-no-turbolink'=>true%>
+                </li>
+              </ul>
+
+            </li>
+        <% end %>
+
+
+<% if session[:dgtid]==0 %>
+        <li>
+
+
+          <a href="">
+            <i class="fa fa-user"></i>
+
+            <span class="nav-label">系统</span>
+
+            <span class="fa arrow"></span>
+          </a>
+          <ul class="nav nav-second-level">
+            <li>
+              <%= link_to '管理员',admins_path,'data-no-turbolink'=>true%>
+            </li>
+          </ul>
+          <ul class="nav nav-second-level">
+            <li>
+              <%= link_to '快递',delives_path,'data-no-turbolink'=>true%>
+            </li>
+          </ul>
+        </li>
+<% end %>
+
+
+        <% if session[:dgtid]==0 %>
+        <li>
+
+
+          <a href="">
+            <i class="fa fa-users"></i>
+
+            <span class="nav-label">用户</span>
+            <span class="fa arrow"></span>
+          </a>
+          <ul class="nav nav-second-level">
+            <li>
+              <%= link_to '用户',users_path,'data-no-turbolink'=>true %>
+            </li>
+            <li>
+              <%= link_to '用户营业额',userprofits_path,'data-no-turbolink'=>true %>
+            </li>
+          </ul>
+        </li>
+<% end %>
+        <% if session[:dgtid]==0 %>
+        <li>
+
+
+          <a href="">
+            <i class="fa fa-users"></i>
+
+            <span class="nav-label">系统</span>
+            <span class="fa arrow"></span>
+          </a>
+          <ul class="nav nav-second-level">
+            <li>
+              <%= link_to '利润',profits_path,'data-no-turbolink'=>true %>
+            </li>
+          </ul>
+          <ul class="nav nav-second-level">
+            <li>
+              <%= link_to '转账到用户',new_rechargeuser_path,'data-no-turbolink'=>true %>
+            </li>
+          </ul>
+          <ul class="nav nav-second-level">
+            <li>
+              <%= link_to '微信用户',wxusers_path,'data-no-turbolink'=>true %>
+            </li>
+          </ul>
+        </li>
+
+<% end %>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      </ul>
+    </div>
+  </nav>
+</div>
+<div id="page-wrapper" class="gray-bg dashbard-1">
+  <div class="row border-bottom">
+    <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+
+      <ul class="nav navbar-top-links navbar-right">
+        <li>
+          <span class="m-r-sm text-muted welcome-message"><a href="/questions" title="返回首页"><i class="fa fa-home"></i></a>云南咖啡线下管理</span>
+        </li>
+
+
+        <li>
+          <a href="/logins?command=exit">
+            <i class="fa fa-sign-out"></i>安全退出
+          </a>
+        </li>
+      </ul>
+
+    </nav>
+  </div>

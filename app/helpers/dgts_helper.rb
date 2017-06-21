@@ -1,0 +1,2 @@
+module DgtsHelper
+end

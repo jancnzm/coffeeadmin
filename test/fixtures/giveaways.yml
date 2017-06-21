@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  enable: 1
+  begindate: 2017-06-20 15:37:25
+  enddate: 2017-06-20 15:37:25
+  buyproduct_id: 1
+  giveproduct_id: 1
+  buynum: 1
+  givenum: 1
+  once: 1
+
+two:
+  name: MyString
+  enable: 1
+  begindate: 2017-06-20 15:37:25
+  enddate: 2017-06-20 15:37:25
+  buyproduct_id: 1
+  giveproduct_id: 1
+  buynum: 1
+  givenum: 1
+  once: 1

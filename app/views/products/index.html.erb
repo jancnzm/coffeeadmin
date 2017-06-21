@@ -1,0 +1,43 @@
+<%= render 'layerbegin' %>
+<div class="col-lg-12">
+  <div class="ibox float-e-margins">
+    <div class="ibox-title">
+      <h3>产品管理</h3>
+    </div>
+    <div class="ibox-content">
+      <table class="table table-hover table-bordered text-center">
+        <thead>
+        <tr>
+          <th class="text-center">产品名称</th>
+          <th class="text-center">厂商</th>
+          <th class="text-center">单位</th>
+          <th class="text-center">价格</th>
+          <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @products.each do |product| %>
+            <tr>
+              <td><%= product.name %></td>
+              <td>
+              <% @dgts.each do |dgt| %>
+                <% if dgt.id == product.dgt_id %>
+                    <%= dgt.name %>
+                        <% break %>
+                    <% end %>
+                <% end %>
+              </td>
+              <td><%= product.unit %></td>
+              <td><%= product.price %></td>
+              <td><%= link_to '编辑',edit_product_path(product) %>
+                <%= link_to '删除', product, method: :delete, data: { confirm: '确认删除?' } %></td>
+            </tr>
+        <% end %>
+        </tbody>
+      </table>
+      <%= link_to "新增",new_product_path,class: "btn btn-w-m btn-primary pull-right" %>
+      <br>
+    </div>
+  </div>
+</div>
+<%=render 'layerend' %>

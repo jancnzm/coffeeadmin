@@ -1,0 +1,2 @@
+class Wxuser < ApplicationRecord
+end

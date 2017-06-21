@@ -1,0 +1,74 @@
+<%= render 'layerbegin' %>
+<div class="col-lg-12">
+  <div class="ibox float-e-margins">
+    <div class="ibox-title">
+      <h3>订单管理</h3>
+    </div>
+    <div class="ibox-content">
+      <table class="table table-hover table-bordered text-center">
+        <thead>
+        <tr>
+          <th class="text-center">商家</th>
+          <th class="text-center">订单编号</th>
+
+
+
+          <th class="text-center">订单状态</th>
+          <th class="text-center">下单时间</th>
+          <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @buycars.each do |buycar| %>
+            <tr>
+              <td>
+                <% order=buycar.orders.first %>
+                <% if order %>
+                    <% busine=Busine.find(order.busine_id) %>
+                    <%= busine.name %>
+                <% end %>
+              </td>
+              <td>
+                <%= buycar.ordernumber %>
+              </td>
+
+              <td>
+
+
+                <% deliveorders=buycar.deliveorders %>
+                <% if  deliveorders.count >0 && session[:dgtid] ==0 %>
+                    已发货
+                <% elsif session[:dgtid] ==0 %>
+                    未发货
+                <% end %>
+
+                <% if session[:dgtid].to_i > 0 %>
+
+                    <% dgtdeliveorders = buycar.deliveorders.where('dgt_id =?',session[:dgtid]) %>
+                    <% if dgtdeliveorders.count > 0 %>
+                        已发货
+                    <% else %>
+                        未发货
+                    <% end %>
+
+                <% end %>
+
+
+
+
+
+              </td>
+              <td><%= buycar.updated_at.strftime('%Y-%m-%d %H:%M:%S') %></td>
+              <td>
+                <%= link_to '编辑',edit_dgtorder_path(buycar) %>
+              </td>
+            </tr>
+        <% end %>
+        </tbody>
+      </table>
+
+      <br>
+    </div>
+  </div>
+</div>
+<%=render 'layerend' %>

@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  dgt_id: 1
+  name: MyString
+  unit: MyString
+  price: 1.5
+  detail: MyString
+  spec: MyString
+
+two:
+  dgt_id: 1
+  name: MyString
+  unit: MyString
+  price: 1.5
+  detail: MyString
+  spec: MyString

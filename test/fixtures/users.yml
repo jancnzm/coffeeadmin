@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  username: MyString
+  login: MyString
+  password_digest: MyString
+  phonecode: MyString
+  phonecodetime: 2017-04-05 20:32:06
+  balance: 1.5
+  isnew: 1
+
+two:
+  username: MyString
+  login: MyString
+  password_digest: MyString
+  phonecode: MyString
+  phonecodetime: 2017-04-05 20:32:06
+  balance: 1.5
+  isnew: 1

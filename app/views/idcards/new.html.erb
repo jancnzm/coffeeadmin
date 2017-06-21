@@ -1,0 +1,60 @@
+<body style="background-color: #fff;">
+<style type="text/css">
+    .fileinput-button-front {
+        position: relative;
+        display: inline-block;
+        overflow: hidden;
+        background-image: url(/images/idfront.png);
+
+        background-size:cover;
+        width: 90%;
+        height: 550px;
+
+
+
+    }
+
+    .fileinput-button-front input {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        opacity: 0;
+        -ms-filter: 'alpha(opacity=0)';
+        font-size: 200px;
+    }
+
+    .fileinput-button-back {
+        position: relative;
+        display: inline-block;
+        overflow: hidden;
+        background-image: url(/images/idback.png);
+        background-size:cover;
+        width: 90%;
+        height: 550px;
+    }
+
+    .fileinput-button-back input {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        opacity: 0;
+        -ms-filter: 'alpha(opacity=0)';
+        font-size: 200px;
+    }
+</style>
+
+<%= form_for(@idcard,:html => {:class=>'form-horizontal m-t',:multipart => true}) do |f| %>
+    <div col-md-12 class="text-center">
+    <span class="btn fileinput-button-front" >
+     <%= f.file_field :idfront %>
+  </span>
+    </div>
+    <br>
+    <div col-md-12 class="text-center">
+    <span class="btn fileinput-button-back">
+     <%= f.file_field :idback %>
+  </span>
+    </div>
+
+<% end %>
+</body>

@@ -1,0 +1,130 @@
+<script>
+    $(document).ready(function(){
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+
+        if($('#status').val()=='-1'){
+            $('#c1').iCheck('check');
+        }else if($('#status').val()=='0'){
+            $('#c3').iCheck('check');
+        }else{
+            $('#c2').iCheck('check');
+        }
+
+        $('#c1').on('ifChecked', function(event){
+            $('#status').val('-1');
+        });
+        $('#c2').on('ifChecked', function(event){
+            $('#status').val('1');
+        });
+        $('#c3').on('ifChecked', function(event){
+            $('#status').val('0');
+        });
+
+    });
+</script>
+
+<%= render 'layerbegin' %>
+<div class="col-lg-12">
+  <div class="ibox float-e-margins">
+    <div class="ibox-title">
+      <h3>编辑用户</h3>
+    </div>
+
+    <div class="ibox-content form-horizontal m-t">
+      <div class="form-group">
+        <%= form_for(@user,:html => {:class=>'form-horizontal m-t',:multipart => true}) do |f| %>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">姓名：</label>
+              <div class="col-sm-5">
+                <%= f.text_field :username,class:"form-control" %>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">账号：</label>
+              <div class="col-sm-5">
+                <%= f.text_field :login,class:"form-control",readonly:'true' %>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">密码：</label>
+              <div class="col-sm-5">
+                <%= f.text_field :password,class:"form-control" %>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">确认密码：</label>
+              <div class="col-sm-5">
+                <%= f.text_field :password_confirmation,class:"form-control" %>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">创建时间：</label>
+              <div class="col-sm-5">
+                <input class="form-control" value='<%=@user.created_at.strftime("%Y-%m-%d %H:%M:%S") %>' readonly="true">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">状态：</label>
+              <div class="col-sm-5">
+                <%= f.hidden_field :status,class:"form-control", id:"status"%>
+                <table>
+                  <tr>
+                    <td>
+
+                      <div class="radio i-checks">
+                        <label>
+                          <input type="radio" checked="" value="option1" name="a" id="c1"> <i></i> 未审核</label>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="radio i-checks">
+                        <label>
+                          <input type="radio" checked="" value="option2" name="a" id="c2"> <i></i> 正常</label>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="radio i-checks">
+                        <label>
+                          <input type="radio" checked="" value="option3" name="a" id="c3"> <i></i> 停用</label>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label"></label>
+              <div class="col-sm-5">
+                <%= f.submit '确定',class: "btn btn-w-m btn-primary pull-right"%>
+              </div>
+            </div>
+            <hr>
+            <div class="col-md-12">
+              <div class="col-md-1"></div>
+              <div class="col-md-8">
+                <div class="col-md-6">
+                  <div class="col-md-12">
+                    <label class="col-sm-4 control-label">证件正面：</label>
+                  </div>
+                  <div class="col-sm-12">
+                    <img class="col-md-12"  src='<%=@user.idfontimg.url %>' >
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label class="col-sm-4 control-label">证件背面：</label>
+                  <div class="col-sm-12">
+                    <img class="col-md-12"  src='<%=@user.idbackimg.url %>' >
+                  </div>
+                </div>
+              </div>
+            </div>
+        <% end %>
+      </div>
+    </div>
+
+  </div>
+</div>
+<%=render 'layerend' %>

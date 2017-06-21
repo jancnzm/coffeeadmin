@@ -1,0 +1,117 @@
+<script>
+    $(document).ready(function(){
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+
+        if($('#status').val()=='-1'){
+            $('#c1').iCheck('check');
+        }else {
+            $('#c2').iCheck('check');
+        }
+
+        $('#c1').on('ifChecked', function(event){
+            $('#status').val('-1');
+        });
+        $('#c2').on('ifChecked', function(event){
+            $('#status').val('1');
+        });
+
+
+        $("#data_1 .input-group.date").datepicker({todayBtn:"linked",keyboardNavigation:!1,forceParse:!1,calendarWeeks:!0,autoclose:!0});
+        $("#data_2 .input-group.date").datepicker({todayBtn:"linked",keyboardNavigation:!1,forceParse:!1,calendarWeeks:!0,autoclose:!0});
+        $(".fancybox").fancybox({openEffect:"none",closeEffect:"none"});
+    });
+</script>
+
+<%= render 'layerbegin' %>
+<div class="col-lg-12">
+  <div class="ibox float-e-margins">
+    <div class="ibox-title">
+      <h3>编辑合同</h3>
+    </div>
+
+    <div class="ibox-content form-horizontal m-t">
+      <div class="form-group">
+        <%= form_for(@pact,:html => {:class=>'form-horizontal m-t',:multipart => true}) do |f| %>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">商家：</label>
+              <div class="col-sm-5">
+                <% busine=@pact.busine %>
+                <input value=<%= busine.name %> readonly='true' class="form-control">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">业务员：</label>
+              <div class="col-sm-5">
+                <% user=@pact.user %>
+                <input value=<%= user.username %> readonly='true'  class="form-control">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">合同号：</label>
+              <div class="col-sm-5">
+                <%= f.text_field :number,class:"form-control" %>
+              </div>
+            </div>
+            <div class="form-group" id="data_1">
+              <label class="col-sm-3 control-label">合同开始时间：</label>
+               <div class="input-group date col-sm-5">
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                <%= f.text_field :begindate,class:"form-control", value:@pact.begindate.strftime("%Y-%m-%d") %>
+              </div>
+            </div>
+            <div class="form-group" id="data_2">
+              <label class="col-sm-3 control-label">合同结束时间：</label>
+              <div class="input-group date col-sm-5">
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                <%= f.text_field :enddate,class:"form-control", value:@pact.enddate.strftime("%Y-%m-%d") %>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">状态：</label>
+              <div class="col-sm-5">
+                <%= f.hidden_field :status,class:"form-control", id:"status"%>
+                <table>
+                  <tr>
+                    <td>
+
+                      <div class="radio i-checks">
+                        <label>
+                          <input type="radio" checked="" value="option1" name="a" id="c1"> <i></i> 未审核</label>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="radio i-checks">
+                        <label>
+                          <input type="radio" checked="" value="option2" name="a" id="c2"> <i></i> 已审核</label>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label"></label>
+              <div class="col-sm-5">
+                <%= f.submit '确定',class: "btn btn-w-m btn-primary pull-right"%>
+              </div>
+            </div>
+        <% end %>
+      </div>
+<hr>
+      <h4>合同附件</h4>
+      <% @pact.attchments.each do |attchment| %>
+            <a class="fancybox" href=<%= attchment.attchmentimg.url %>>
+              <img  src=<%= attchment.attchmentimg.url %> />
+            </a>
+
+
+      <% end %>
+
+    </div>
+
+  </div>
+</div>
+<%=render 'layerend' %>

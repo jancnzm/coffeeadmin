@@ -1,0 +1,40 @@
+<script>
+    //var wx= "http://res.wx.qq.com/open/js/jweixin-1.0.0.js";
+    //var wx = require("http://localhost:8080/x5/UI2/demo/misc/importJs/outterAMD1.js");
+    wx.config({
+        debug: false,
+        appId: '<%= @sign_package["appId"] %>',
+        url: '<%= @sign_package["url"] %>',
+        timestamp: '<%= @sign_package["timestamp"] %>' ,
+        nonceStr: '<%= @sign_package["nonceStr"] %>',
+        signature: '<%= @sign_package["signature"] %>',
+        jsApiList: ['chooseWXPay']
+    });
+
+    wx.ready(function() {
+
+
+        if (window.weixin_ready) {
+            wx.chooseWXPay({
+                timestamp: <%= @pay_ticket_param[:timeStamp] %>, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+                nonceStr: "<%= @pay_ticket_param[:nonceStr] %>", // 支付签名随机串，不长于 32 位
+                package: "<%= @pay_ticket_param[:package] %>", //统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***
+                signType: "<%= @pay_ticket_param[:signType] %>", // 签名方式，默认为"SHA1"，使用新版支付需传入"MD5"
+                paySign: "<%= @pay_ticket_param[:paySign] %>", // 支付签名
+                success: function(res) {
+                    // 支付成功后的回调函数
+                    alert("支付成功");
+                }
+            });
+        } else {
+            alert('wait for authentication!');
+        }
+
+
+
+    });
+
+    wx.error(function() {
+        window.weixin_ready = false;
+    });
+</script>

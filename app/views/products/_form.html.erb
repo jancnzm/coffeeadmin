@@ -1,0 +1,141 @@
+<script>
+  $(document).ready(function(){
+
+      toastr.options = {
+          "closeButton": true,
+          "debug": false,
+          "progressBar": false,
+          "positionClass": "toast-top-full-width",
+          "onclick": null,
+          "showDuration": "400",
+          "hideDuration": "1000",
+          "timeOut": "7000",
+          "extendedTimeOut": "1000",
+          "showEasing": "swing",
+          "hideEasing": "linear",
+          "showMethod": "fadeIn",
+          "hideMethod": "fadeOut"
+      }
+
+     $('#selectdgt').change(function(){
+        $('#dgtid').val($(this).val());
+     });
+
+      if($('#dgtid').val()!=''){
+          $('#selectdgt').val($('#dgtid').val());
+      }
+
+      $('#smt').click(function(){
+         if($('dgtid').val().toString()=='' || $('#dgtid').val()=='0'){
+             toastr.warning('请选择厂商');
+             alert($('#dgtid').val());
+             return false;
+         }
+      });
+
+
+
+
+  });
+
+  function readURL(input) {
+      if (input.files && input.files[0]) {
+          var reader = new FileReader();
+
+          reader.onload = function (e) {
+              $('#img1')
+                      .attr('src', e.target.result)
+              //.width(300)
+              //.height(200);
+          };
+
+          reader.readAsDataURL(input.files[0]);
+      }
+  }
+</script>
+<div class="col-md-8 ibox ibox-content">
+<div class="ibox-content form-horizontal m-t">
+  <div class="form-group">
+    <%= form_for(@product,:html => {:class=>'form-horizontal m-t',:multipart => true}) do |f| %>
+        <div class="form-group">
+          <label class="col-sm-3 control-label">产品名称：</label>
+          <div class="col-sm-9">
+            <%= f.text_field :name,class:"form-control" %>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label">厂商名称：</label>
+          <div class="col-sm-9">
+            <%= f.text_field :dgt_id, id:'dgtid' %>
+            <select class="form-control m-b" id="selectdgt">
+              <option value=0>请选择厂商</option>
+              <% @dgts.each do |dgt| %>
+              <option value=<%= dgt.id %> ><%= dgt.name %></option>
+              <% end %>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label">单位：</label>
+          <div class="col-sm-9">
+            <%= f.text_field :unit,class:"form-control" %>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label">价格：</label>
+          <div class="col-sm-9">
+            <%= f.text_field :price,class:"form-control" %>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label">规格：</label>
+          <div class="col-sm-9">
+            <%= f.text_field :spec,class:"form-control" %>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label">厂商成本：</label>
+          <div class="col-sm-9">
+            <%= f.text_field :dgtpro,class:"form-control" %>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label">业务员利润：</label>
+          <div class="col-sm-9">
+            <%= f.text_field :businepro,class:"form-control" %>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-sm-3 control-label">产品图片：</label>
+          <div class="col-sm-9">
+            <%= f.file_field :productimg,class:"form-control",:onchange => "readURL(this)" %>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-sm-3 control-label">明细：</label>
+          <div class="col-sm-9">
+            <%= f.kindeditor :detail,class:"form-control" %>
+          </div>
+        </div>
+
+
+        <div class="form-group">
+          <label class="col-sm-3 control-label"></label>
+          <div class="col-sm-9 text-right">
+            <%= f.submit '确定',class: "btn btn-w-m btn-primary ",id:'smt' %>&nbsp;<%= link_to "返回",products_path,class: "btn btn-w-m btn-primary " %>
+          </div>
+        </div>
+    <% end %>
+  </div>
+</div>
+</div>
+<div class="col-md-4">
+  <div class="col-md-12">
+    产品图片预览
+  </div>
+  <div class="col-md-12">
+  <img width="100%" id="img1">
+  </div>
+</div>

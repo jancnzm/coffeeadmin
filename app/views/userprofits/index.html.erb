@@ -1,0 +1,39 @@
+<%= render 'layerbegin' %>
+<div class="col-lg-12">
+  <div class="ibox float-e-margins">
+    <div class="ibox-title">
+      <h3>用户营业额</h3>
+    </div>
+    <div class="ibox-content">
+      <table class="table table-hover table-bordered text-center">
+        <thead>
+        <tr>
+          <th class="text-center">姓名</th>
+          <th class="text-center">用户名</th>
+
+          <th class="text-center">营业额</th>
+          <th class="text-center">备注</th>
+          <th class="text-center">时间</th>
+
+
+        </tr>
+        </thead>
+        <tbody>
+        <% @useramounts.each do |useramount| %>
+            <tr>
+              <td>
+                <% user=useramount.user %>
+                <%= user.username %></td>
+              <td><%= user.login %></td>
+              <td><%= useramount.amount %></td>
+              <td><%= useramount.content %></td>
+              <td><%= useramount.created_at.strftime('%Y-%m-%d %H:%M:%S') %></td>
+            </tr>
+        <% end %>
+        </tbody>
+      </table>
+      <br>
+    </div>
+  </div>
+</div>
+<%=render 'layerend' %>
