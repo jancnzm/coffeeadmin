@@ -55,14 +55,7 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-sm-6 text-left">
-        <label style="width: 100px;">业务员</label><span><%= @user.username %></span>
-      </div>
-      <div class="col-sm-6 text-left">
-        <label style="width: 100px;">业务员电话</label><span><%= @user.login %></span>
-      </div>
-    </div>
+
 
     <div class="row">
       <div class="col-sm-6 text-left">
@@ -129,6 +122,8 @@
 
                   <td>&yen;&nbsp;<%= order.paymentamount %></td>
                 </tr>
+
+
         <% sum=sum+order.paymentamount %>
             <% end %>
         <% end %>
@@ -136,7 +131,7 @@
         </tbody>
       </table>
     </div>
-    <!-- /table-responsive -->
+
 
     <table class="table invoice-total">
       <tbody>
@@ -145,8 +140,49 @@
         </td>
         <td>&yen;&nbsp;<%= sum %></td>
       </tr>
-       </tbody>
+      </tbody>
     </table>
+
+<br>
+
+    <% dgt=nil %>
+    <% if session[:dgtid].to_i > 0 %>
+        <% dgt=Dgt.find(session[:dgtid]) %>
+    <% end %>
+       <% if session[:dgtid].to_i == 0 || dgt.name.include?('景兰') %>
+    <div class="table-responsive m-t">
+      <table class="table invoice-table">
+        <thead>
+        <tr>
+          <th>咖啡瓷套杯清单</th>
+
+          <th>数量</th>
+
+        </tr>
+        </thead>
+        <tbody>
+
+
+
+
+                    <% @attchorders.each do |attchorder| %>
+                        <tr>
+                          <td>
+                            <strong><%= attchorder.name %></strong>
+                          </td>
+                          <td>
+                            <%= attchorder.number %>
+                          </td>
+
+                        </tr>
+                    <% end %>
+
+        </tbody>
+      </table>
+    </div>
+    <% end %>
+    <!-- /table-responsive -->
+
 
 <p>&nbsp;</p>
     <div class="row">
@@ -180,6 +216,8 @@
                   <td><%= link_to '删除', [deliveorder.buycar,deliveorder], method: :delete, data: { confirm: '确认删除?' } %></td>
                 </tr>
         <% end %>
+
+
         </tbody>
       </table>
     </div>
@@ -224,6 +262,20 @@
     <div class="alert alert-danger"><strong>注意：</strong> 请仔细核对快递公司及发货订单号。
     </div>
 <% end %>
+
+
+    <hr style="margin-top:0px;margin-bottom: 5px;">
+
+    <% if @user %>
+        <div class="row">
+          <div class="col-sm-6 text-left">
+            <label style="width: 100px;">业务客服</label><span><%= @user.username %></span>
+          </div>
+          <div class="col-sm-6 text-left">
+            <label style="width: 100px;">业务客服电话</label><span><%= @user.login %></span>
+          </div>
+        </div>
+    <% end %>
 
 
   </div>

@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  buycar_id: 1
+  name: MyString
+  number: 1
+  flag: MyString
+
+two:
+  buycar_id: 1
+  name: MyString
+  number: 1
+  flag: MyString

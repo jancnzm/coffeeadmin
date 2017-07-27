@@ -1,0 +1,2 @@
+module UserinoutcountsHelper
+end

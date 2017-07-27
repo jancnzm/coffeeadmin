@@ -6,11 +6,13 @@
             radioClass: 'iradio_square-green'
         });
 
-
-        if($('#enable').val()== null || $('#enable').val()== '0' ){
-            $('#enablecheck').iCheck('check');
-        }else{
+if($('#enable').val()==''){
+    $('#enable').val('1');
+}
+        if($('#enable').val()== '0' ){
             $('#enablecheck').iCheck('uncheck');
+        }else{
+            $('#enablecheck').iCheck('check');
         }
             $('#enablecheck').on('ifChecked',function(event){
                 $('#enable').val(1);
@@ -19,10 +21,14 @@
             $('#enable').val(0);
         });
 
-        if($('#once').val()== null || $('#once').val()== '0' ){
-            $('#oncecheck').iCheck('check');
-        }else{
+        if($('#once').val()==''){
+            $('#once').val('1');
+        }
+
+        if($('#once').val()== '0' ){
             $('#oncecheck').iCheck('uncheck');
+        }else{
+            $('#oncecheck').iCheck('check');
         }
         $('#oncecheck').on('ifChecked',function(event){
             $('#once').val(1);
@@ -39,18 +45,19 @@
             $('#buyproductselect').val($('#buyproductid').val());
         }
 
-
-
-
-        $('#smt').click(function(){
-            if (elem.checked){
-                $('#status').val('1');
-            }else
-            {
-                $('#status').val('0');
-            }
-
+        $('#giveproductselect').change(function(){
+            $('#giveproductid').val($(this).val());
         });
+
+        if($('#giveproductid').val()!=''){
+            $('#giveproductselect').val($('#giveproductid').val());
+        }
+
+        $('#selectproduct').change(function(){
+            $('#productInput').val($(this).val());
+        });
+
+
         $("#data_1 .input-group.date").datepicker({todayBtn:"linked",keyboardNavigation:!1,forceParse:!1,calendarWeeks:!0,autoclose:!0});
         $("#data_2 .input-group.date").datepicker({todayBtn:"linked",keyboardNavigation:!1,forceParse:!1,calendarWeeks:!0,autoclose:!0});
 
@@ -94,19 +101,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-3 control-label">购买商品：</label>
-            <div class="col-sm-5">
-              <%= f.text_field :buyproduct_id,class:"form-control",id:'buyproductid' %>
-              <select class="form-control m-b" id="buyproductselect">
-                <option value=0></option>
-                <% @products.each do |product| %>
-                    <option value=<%= product.id %> ><%= product.name %></option>
-                <% end %>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-3 control-label">购买数量：</label>
+            <label class="col-sm-3 control-label">合计购买数量：</label>
             <div class="col-sm-5">
               <%= f.text_field :buynum,class:"form-control" %>
             </div>
@@ -146,5 +141,7 @@
           </div>
       <% end %>
     </div>
+
+
   </div>
 </div>

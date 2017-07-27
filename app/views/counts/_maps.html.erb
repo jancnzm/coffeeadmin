@@ -1,0 +1,127 @@
+<script>
+  $(document).ready(function(){
+      $.ajax({
+          async : false,
+          url :  "/counts/mapscount",
+          type : "GET",
+          dataType : 'jsonp',
+          jsonp : 'callback',
+          timeout : 5000,
+          success : function(jsonstr) {// 客户端jquery预先定义好的callback函数,成功获取跨域服务器上的json数据后,会动态执行这个callback函数
+              var s = echarts.init(document.getElementById("echarts-map-chart")),
+                      c = { title: { text: "云南小粒咖啡区域销量", subtext: "", x: "center" },
+                          tooltip: { trigger: "item" },
+                          legend: { orient: "vertical",
+                              x: "left", data: ["景兰","后谷"] },
+                          dataRange: { min: 0, max: jsonstr.max, x: "left", y: "bottom", text: ["高", "低"], calculable: !0 },
+                          toolbox: { show: !0, orient: "vertical", x: "right", y: "center", feature: { mark: { show: !0 }, dataView: { show: !0, readOnly: !1 }, restore: { show: !0 }, saveAsImage: { show: !0}} },
+                          roamController: { show: !0, x: "right", mapTypeControl: { china: !0} },
+                          series: [{ name: "景兰", type: "map", mapType: "china", roam: !1,
+                              itemStyle: { normal: { label: { show: !0} }, emphasis: { label: { show: !0}} },
+                              data: [ { name: "北京", value: jsonstr.jinglan.beijing },
+                                  { name: "天津", value: jsonstr.jinglan.tianjin },
+                                  { name: "上海", value: jsonstr.jinglan.shanghai },
+                                  { name: "重庆", value: jsonstr.jinglan.chongqing },
+                                  { name: "河北", value: jsonstr.jinglan.hebei },
+                                  { name: "河南", value: jsonstr.jinglan.henan },
+                                  { name: "云南", value: jsonstr.jinglan.yunnan },
+                                  { name: "辽宁", value: jsonstr.jinglan.liaoning },
+                                  { name: "黑龙江", value: jsonstr.jinglan.heilongjiang },
+                                  { name: "湖南", value: jsonstr.jinglan.hunan },
+                                  { name: "安徽", value: jsonstr.jinglan.anhui },
+                                  { name: "山东", value: jsonstr.jinglan.shandong },
+                                  { name: "新疆", value: jsonstr.jinglan.xinjiang },
+                                  { name: "江苏", value: jsonstr.jinglan.jiangsu },
+                                  { name: "浙江", value: jsonstr.jinglan.zhejiang },
+                                  { name: "江西", value: jsonstr.jinglan.jiangxi },
+                                  { name: "湖北", value: jsonstr.jinglan.hubei },
+                                  { name: "广西", value: jsonstr.jinglan.guangxi },
+                                  { name: "甘肃", value: jsonstr.jinglan.gansu },
+                                  { name: "山西", value: jsonstr.jinglan.shanxi },
+                                  { name: "内蒙古", value: jsonstr.jinglan.neimenggu },
+                                  { name: "陕西", value: jsonstr.jinglan.shangxi },
+                                  { name: "吉林", value: jsonstr.jinglan.jilin },
+                                  { name: "福建", value: jsonstr.jinglan.fujian },
+                                  { name: "贵州", value: jsonstr.jinglan.guizhou },
+                                  { name: "广东", value: jsonstr.jinglan.guangdong },
+                                  { name: "青海", value: jsonstr.jinglan.qinghai },
+                                  { name: "西藏", value: jsonstr.jinglan.xizang },
+                                  { name: "四川", value: jsonstr.jinglan.sichuan },
+                                  { name: "宁夏", value: jsonstr.jinglan.ningxia },
+                                  { name: "海南", value: jsonstr.jinglan.hainan },
+                                  { name: "台湾", value: jsonstr.jinglan.taiwan },
+                                  { name: "香港", value: jsonstr.jinglan.xianggang },
+                                  { name: "澳门", value: jsonstr.jinglan.aomen}] },
+                              { name: "后谷", type: "map", mapType: "china",
+                                  itemStyle: { normal: { label: { show: !0} }, emphasis: { label: { show: !0}} },
+                                  data: [{ name: "北京", value: jsonstr.hougu.beijing },
+                                      { name: "天津", value: jsonstr.hougu.tianjin },
+                                      { name: "上海", value: jsonstr.hougu.shanghai },
+                                      { name: "重庆", value: jsonstr.hougu.chongqing },
+                                      { name: "河北", value: jsonstr.hougu.hebei },
+                                      { name: "河南", value: jsonstr.hougu.henan },
+                                      { name: "云南", value: jsonstr.hougu.yunnan },
+                                      { name: "辽宁", value: jsonstr.hougu.liaoning },
+                                      { name: "黑龙江", value: jsonstr.hougu.heilongjiang },
+                                      { name: "湖南", value: jsonstr.hougu.hunan },
+                                      { name: "安徽", value: jsonstr.hougu.anhui },
+                                      { name: "山东", value: jsonstr.hougu.shandong },
+                                      { name: "新疆", value: jsonstr.hougu.xinjiang },
+                                      { name: "江苏", value: jsonstr.hougu.jiangsu },
+                                      { name: "浙江", value: jsonstr.hougu.zhejiang },
+                                      { name: "江西", value: jsonstr.hougu.jiangxi },
+                                      { name: "湖北", value: jsonstr.hougu.hubei },
+                                      { name: "广西", value: jsonstr.hougu.guangxi },
+                                      { name: "甘肃", value: jsonstr.hougu.gansu },
+                                      { name: "山西", value: jsonstr.hougu.shanxi },
+                                      { name: "内蒙古", value: jsonstr.hougu.neimenggu },
+                                      { name: "陕西", value: jsonstr.hougu.shangxi },
+                                      { name: "吉林", value: jsonstr.hougu.jilin },
+                                      { name: "福建", value: jsonstr.hougu.fujian },
+                                      { name: "贵州", value: jsonstr.hougu.guizhou },
+                                      { name: "广东", value: jsonstr.hougu.guangdong },
+                                      { name: "青海", value: jsonstr.hougu.qinghai },
+                                      { name: "西藏", value: jsonstr.hougu.xizang },
+                                      { name: "四川", value: jsonstr.hougu.sichuan },
+                                      { name: "宁夏", value: jsonstr.hougu.ningxia },
+                                      { name: "海南", value: jsonstr.hougu.hainan },
+                                      { name: "台湾", value: jsonstr.hougu.taiwan },
+                                      { name: "香港", value: jsonstr.hougu.xianggang },
+                                      { name: "澳门", value: jsonstr.hougu.aomen}] }
+
+                          ] };
+              s.setOption(c), $(window).resize(s.resize);
+          },
+          error : function(xhr) {
+
+          }
+      });
+
+
+  });
+</script>
+    <div class="ibox float-e-margins">
+      <div class="ibox-title">
+        <h5>中国地图</h5>
+        <div class="ibox-tools">
+          <a class="collapse-link">
+            <i class="fa fa-chevron-up"></i>
+          </a>
+          <a class="dropdown-toggle" data-toggle="dropdown" href="graph_flot.html#">
+            <i class="fa fa-wrench"></i>
+          </a>
+          <ul class="dropdown-menu dropdown-user">
+            <li><a href="graph_flot.html#">选项1</a>
+            </li>
+            <li><a href="graph_flot.html#">选项2</a>
+            </li>
+          </ul>
+          <a class="close-link">
+            <i class="fa fa-times"></i>
+          </a>
+        </div>
+      </div>
+      <div class="ibox-content">
+        <div style="height:600px" id="echarts-map-chart"></div>
+      </div>
+    </div>

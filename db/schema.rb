@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170620073954) do
+ActiveRecord::Schema.define(version: 20170704023109) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "username"
@@ -32,6 +32,26 @@ ActiveRecord::Schema.define(version: 20170620073954) do
     t.string   "attchmentimg_content_type"
     t.integer  "attchmentimg_file_size"
     t.datetime "attchmentimg_updated_at"
+  end
+
+  create_table "attchorders", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "buycar_id"
+    t.string   "name"
+    t.integer  "number"
+    t.string   "flag"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "attchproducts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "name"
+    t.integer  "number"
+    t.string   "flag"
+    t.integer  "status"
+    t.integer  "pact_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "busine_id"
   end
 
   create_table "busines", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -59,6 +79,13 @@ ActiveRecord::Schema.define(version: 20170620073954) do
     t.datetime "updated_at",             null: false
     t.string   "openid"
     t.integer  "status"
+  end
+
+  create_table "commissions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "user_id"
+    t.float    "commission", limit: 24
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
   end
 
   create_table "deliveorders", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -96,8 +123,17 @@ ActiveRecord::Schema.define(version: 20170620073954) do
 
   create_table "giveawaybusines", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "busine_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.integer  "times"
+    t.integer  "giveaway_id"
+  end
+
+  create_table "giveawayproducts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "giveaway_id"
+    t.integer  "product_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
   create_table "giveaways", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -127,6 +163,15 @@ ActiveRecord::Schema.define(version: 20170620073954) do
     t.string   "idback_content_type"
     t.integer  "idback_file_size"
     t.datetime "idback_updated_at"
+  end
+
+  create_table "invitecodes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "code"
+    t.integer  "user_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.integer  "status"
+    t.datetime "invalidtime"
   end
 
   create_table "orders", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -239,6 +284,14 @@ ActiveRecord::Schema.define(version: 20170620073954) do
     t.datetime "idbackimg_updated_at"
     t.integer  "status"
     t.string   "userpwd_digest"
+    t.integer  "up_id"
+  end
+
+  create_table "withdraws", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "user_id"
+    t.float    "withdraw",   limit: 24
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
   end
 
   create_table "wxusers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

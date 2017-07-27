@@ -29,10 +29,10 @@
               </td>
               <td>
 
-<%= giveaway.begindate %>
+<%= giveaway.begindate.strftime('%Y-%m-%d') %>
               </td>
               <td>
-<%= giveaway.enddate %>
+<%= giveaway.enddate.strftime('%Y-%m-%d') %>
               </td>
 
               <td><%= link_to '编辑',edit_giveaway_path(giveaway) %>

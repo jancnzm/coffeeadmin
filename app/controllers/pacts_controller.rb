@@ -1,7 +1,8 @@
 class PactsController < ApplicationController
   before_action :set_pact, only: [:show, :edit, :update, :destroy]
   def index
-    @pacts=Pact.all.order('updated_at desc')
+    @pacts=Pact.all.paginate(:page => params[:page], :per_page => 20).order("id desc")
+    @pactcount=Pact.count
     #@busines=Busine.all
     @users=User.all
   end

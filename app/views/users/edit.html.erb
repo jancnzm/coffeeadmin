@@ -9,8 +9,10 @@
             $('#c1').iCheck('check');
         }else if($('#status').val()=='0'){
             $('#c3').iCheck('check');
-        }else{
+        }else if($('#status').val()=='1'){
             $('#c2').iCheck('check');
+        }else if($('#status').val()=='2'){
+            $('#c4').iCheck('check');
         }
 
         $('#c1').on('ifChecked', function(event){
@@ -21,6 +23,9 @@
         });
         $('#c3').on('ifChecked', function(event){
             $('#status').val('0');
+        });
+        $('#c4').on('ifChecked', function(event){
+            $('#status').val('2');
         });
 
     });
@@ -89,6 +94,12 @@
                       <div class="radio i-checks">
                         <label>
                           <input type="radio" checked="" value="option3" name="a" id="c3"> <i></i> 停用</label>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="radio i-checks">
+                        <label>
+                          <input type="radio" checked="" value="option4" name="a" id="c4"> <i></i> 业务管理员</label>
                       </div>
                     </td>
                   </tr>

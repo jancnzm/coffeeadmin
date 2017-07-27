@@ -2,7 +2,8 @@ class BusinesController < ApplicationController
 
   before_action :set_busine, only: [:show, :edit, :update, :destroy]
   def index
-    @busines=Busine.all.order("id desc")
+    @busines=Busine.all.paginate(:page => params[:page], :per_page => 20).order("id desc")
+    @businecount =Busine.count
   end
 
   def edit

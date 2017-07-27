@@ -19,7 +19,9 @@
         </tr>
         </thead>
         <tbody>
+        <% count = 0 %>
         <% @wxusers.each do |wxuser| %>
+        <% count += 1 %>
             <tr>
               <td><img width="40" src=<%= wxuser.headimgurl %>></td>
               <td style="padding-top:20px;"><%= wxuser.nickname %></td>
@@ -73,7 +75,21 @@
         </tbody>
       </table>
 
-      <br>
+      <div class="text-center">
+        <table align="center">
+          <tr>
+            <td>
+              记录数：<%= count %>
+              &nbsp;/&nbsp;
+              <%= @wxusercount %>&nbsp;&nbsp;&nbsp;&nbsp;
+            </td>
+
+            <td>
+              <%= will_paginate @wxusers, renderer: BootstrapPagination::Rails %>
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
   </div>
 </div>

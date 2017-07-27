@@ -25,18 +25,27 @@ Rails.application.routes.draw do
       get 'checkpwd'
       get 'setpwd'
       get 'authpwd'
+      get 'getcurrentseller'
+      get 'getinvitecode'
+      get 'myinvitecode'
+      get 'getsalesman'
+      get 'getup'
       get 'test'
+      get 'sendtest'
+      get 'getcommission'
     end
   end
   resources :idcards
   resources :users do
     resources :useramounts
+    resources :withdraws
   end
   resources :wxpayments do
     collection do
       get 'information'
       post 'notify'
       get 'payuser'
+      get 'manualnotify'
     end
   end
   resources :getopenids
@@ -67,7 +76,17 @@ Rails.application.routes.draw do
       get 'getuser'
     end
   end
-  resources :giveaways
+  resources :giveaways do
+    resources :giveawaybusines
+    resources :giveawayproducts
+  end
+resources :counts do
+  collection do
+    get 'mapscount'
+  end
+end
+  #resources :calcommissions
+resources :userinoutcounts do
 
-
+end
 end

@@ -19,7 +19,9 @@
         </tr>
         </thead>
         <tbody>
+        <% amountsum = 0 %>
         <% @useramounts.each do |useramount| %>
+        <% amountsum += useramount.amount %>
             <tr>
               <td>
                 <% user=useramount.user %>
@@ -32,7 +34,21 @@
         <% end %>
         </tbody>
       </table>
-      <br>
+      <div class="text-center">
+        <table align="center">
+          <tr>
+            <td>
+              营业额：<%= amountsum.round(2) %>
+              &nbsp;/&nbsp;
+              <%= @useramountsum.round(2) %>&nbsp;&nbsp;&nbsp;&nbsp;
+            </td>
+
+            <td>
+              <%= will_paginate @useramounts, renderer: BootstrapPagination::Rails %>
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
   </div>
 </div>

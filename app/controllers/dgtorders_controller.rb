@@ -31,14 +31,18 @@ end
     order=@buycar.orders.first
          busine=Busine.find(order.busine_id)
     pacts=busine.pacts.where('begindate <=? and enddate >= ?',@buycar.created_at,@buycar.created_at)
+    if pacts.count > 0
     @user=pacts.first.user
+    end
     #debugger
     #busine=@buycar.busine
     #debugger
     #pacts=busine.pact
+    @attchorders=@buycar.attchorders
 
     if session[:dgtid].to_i>0
       @deliveorders=@buycar.deliveorders.where('dgt_id=?',session[:dgtid])
+
     else
       @deliveorders=@buycar.deliveorders
     end

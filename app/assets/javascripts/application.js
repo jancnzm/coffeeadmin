@@ -34,5 +34,6 @@
 //= require toastr.min.js
 //= require jquery.PrintArea.js
 //= require plugins/fancybox/jquery.fancybox.js
+//= require plugins/echarts/echarts-all.js
 
 

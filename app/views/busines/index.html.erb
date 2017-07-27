@@ -18,7 +18,9 @@
         </tr>
         </thead>
         <tbody>
+        <% count = 0 %>
         <% @busines.each do |busine| %>
+        <% count+=1 %>
             <tr>
               <td><%= busine.name %></td>
               <td><%= busine.province %><%= busine.city %><%= busine.districe %><%= busine.address %></td>
@@ -33,7 +35,22 @@
         <% end %>
         </tbody>
       </table>
-      <br>
+
+      <div class="text-center">
+        <table align="center">
+          <tr>
+            <td>
+              记录数：<%= count %>
+              &nbsp;/&nbsp;
+              <%= @businecount %>&nbsp;&nbsp;&nbsp;&nbsp;
+            </td>
+
+            <td>
+              <%= will_paginate @busines, renderer: BootstrapPagination::Rails %>
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
   </div>
 </div>

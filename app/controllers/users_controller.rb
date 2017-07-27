@@ -1,13 +1,18 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
   def index
-    @users=User.where("isnew=?",0).order("id desc")
+    @users=User.where("isnew=?",0).paginate(:page => params[:page], :per_page => 20).order("id desc")
     @useramounts=Useramount.all
+    @usercount = User.where("isnew=?",0).count
   end
 
   def edit
 @myuser=User.find(params[:id])
 
+  end
+
+  def show
+    @parent = @user.parent
   end
 
   def update

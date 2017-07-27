@@ -2,7 +2,8 @@ class WxusersController < ApplicationController
 
   before_action :set_wxuser, only: [:show, :edit, :update, :destroy]
   def index
-    @wxusers=Wxuser.all
+    @wxusers=Wxuser.all.paginate(:page => params[:page], :per_page => 20).order("id desc")
+    @wxusercount = Wxuser.count
     @dgts=Dgt.all
   end
 

@@ -1,22 +1,31 @@
 class ApisController < ApplicationController
   skip_before_action :verify_authenticity_token, :only => [:idfont,:idback,:attchment]
   def registeruser
-    #code 200 正常 201 用户名已存在 202注册中
+    #code 200 正常 201 用户名已存在 202注册中 203无效的邀请码
     code=200
+    invitecode =Invitecode.where('code = ? and status =? and invalidtime >?',params[:invitecode],1,Time.now)
+
     user=User.find(params[:userid])
     hasuser=User.find_by_login(params[:login])
     if hasuser && hasuser.login == params[:login]
       code=201
-    else
+    elsif invitecode.count > 0
+      upuser = invitecode.first.user
+      invitecode.first.status = 0
+      invitecode.first.save
       user.username=params[:username]
       user.login=params[:login]
       user.password=params[:password]
       user.password_confirmation=params[:password]
       user.isnew=0
       user.balance=0
-      user.status=-1
+      user.status=1
+      user.up_id = upuser.id
       user.save
+    else
+      code = 203
     end
+    #debugger
     render json: params[:callback]+'({"code":"'+code.to_s+'",user:"'+user.id.to_s+'"})',content_type: "application/javascript"
   end
 
@@ -119,6 +128,14 @@ class ApisController < ApplicationController
   def pact
     busine=Busine.create(name:params[:bussname],address:params[:bussaddress],province:params[:province],city:params[:city],districe:params[:district],contact:params[:contact],contactphone:params[:contactphone],buessphone:params[:bussphone])
     pact=Pact.create(busine_id:busine.id,user_id:params[:userid],number:params[:pactnumber],begindate:DateTime.parse(params[:begindate]),enddate:DateTime.parse(params[:enddate]),status:-1)
+    attchproducts=pact.attchproducts
+    if params[:taobei].to_i >0
+      attchproducts.create(name:'套杯',number:params[:taobei].to_i,flag:'jinglan',status:0, busine_id:busine.id)
+    end
+    if params[:tuopan].to_i >0
+      attchproducts.create(name:'竹托盘',number:params[:tuopan].to_i,flag:'jinglan',status:0, busine_id:busine.id)
+    end
+
     render json: params[:callback]+'({"pactid":'+pact.id.to_s+'})',content_type: "application/javascript"
   end
 
@@ -152,7 +169,7 @@ class ApisController < ApplicationController
   end
 
   def mypact
-    pacts=User.find(params[:userid]).pacts
+    pacts=User.find(params[:userid]).pacts.order('id desc')
     pactarr=Array.new
     pacts.each do |f|
       selfpact=Mypact.new
@@ -166,10 +183,8 @@ class ApisController < ApplicationController
       selfpact.contact=busine.contact
       selfpact.contactphone=busine.contactphone
       paycount=0
-      orders=Order.where("busine_id=? and updated_at>=? and updated_at<?",busine.id,f.begindate,f.enddate)
-      orders.each do |o|
-        paycount=paycount+o.paymentamount
-      end
+      orders=Order.where("busine_id=? and updated_at>=? and updated_at<? and status = ?",busine.id,f.begindate,f.enddate,1)
+      paycount = orders.sum('paymentamount')
       selfpact.paycount=paycount
       pactarr.push(selfpact)
     end
@@ -342,6 +357,140 @@ class ApisController < ApplicationController
     }
     send_pay_success(touser,template_id,url,topcolor,data)#厂家发货订单消息
   end
+
+  class Pactbusine
+    attr :busine,true
+    attr :buycars,true
+  end
+
+
+  def getcurrentseller
+    busine = Busine.find(params[:busineid])
+    pact = busine.pacts.order('id desc').first
+    orders = Order.where('busine_id = ?', params[:busineid])
+    buycar_id_arr = Array.new
+    orders.each do |order|
+      if order.created_at >= pact.begindate && order.created_at <= pact.enddate
+        buycar = order.buycar
+        if buycar.status == 1
+        buycar_id_arr.push buycar.id
+          end
+      end
+    end
+    buycar_id_arr.uniq!
+    buycararr = Array.new
+    buycar_id_arr.each do |buycarid|
+      buycar = Buycar.find(buycarid)
+      buycararr.push buycar
+    end
+    pactbusine = Pactbusine.new
+    pactbusine.busine = busine
+    pactbusine.buycars = buycararr
+    render json:params[:callback]+'('+pactbusine.to_json+')',content_type: "application/javascript"
+  end
+
+  def getinvitecode
+    invalidcode = Invitecode.where('invalidtime < ?',Time.now)
+    invalidcode.each do |delcode|
+      delcode.destroy
+    end
+    if params[:userid]
+singlecode=''
+      8.times do |f|
+        singlecode +=rand(10).to_s
+      end
+      newcode = Invitecode.where('code = ?',singlecode)
+      if newcode.count >0
+        getinvitecode
+      else
+        user=User.find(params[:userid])
+        invitecodes =user.invitecodes
+        invitecodes.create(code:singlecode,status:1,invalidtime:Time.now + 1.days)
+      end
+    end
+    invitecodes=User.find(params[:userid]).invitecodes
+    render json: params[:callback]+'({"invitecode":' + invitecodes.to_json + '})',content_type: "application/javascript"
+  end
+
+  def myinvitecode
+    invitecodes=User.find(params[:userid]).invitecodes.where('invalidtime > ?',Time.now)
+    render json: params[:callback]+'({"invitecode":' + invitecodes.to_json + '})',content_type: "application/javascript"
+  end
+
+  class Salesmanclass
+    attr :name,true
+    attr :amount,true
+    attr :profit,true
+  end
+  def getsalesman
+    childrens = User.find(params[:userid]).childrens
+    salesmanarr = Array.new
+    childrens.each do |child|
+      salesman = Salesmanclass.new
+      salesman.name = child.username
+      amount = 0
+      pacts = child.pacts.where('begindate <= ? and enddate >= ?',Time.now,Time.now)
+      pacts.each do |pact|
+        buycars = Order.where('busine_id = ? and status = ?',pact.busine_id,1)
+        amount += buycars.sum('paymentamount')
+      end
+      salesman.amount = amount
+      salesman.profit = child.balance
+      salesmanarr.push salesman
+    end
+    render json: params[:callback]+'({"salesman":' + salesmanarr.to_json + '})',content_type: "application/javascript"
+  end
+
+  def getup
+    parent = User.find(params[:userid]).parent
+    code ='无'
+    if parent
+      code = parent.username
+    end
+    render json: params[:callback]+'({"code":' + code.to_json + '})',content_type: "application/javascript"
+  end
+
+  def getcommission
+    user = User.find(params[:userid]).order('id desc')
+    commissions = user.commissions
+    render json: params[:callback]+'({"commission":' + commissions.to_json + '})',content_type: "application/javascript"
+  end
+
+  def sendtest
+    wxusers=Array.new
+    wxusers.push 'omi6rv6zuFj5cc1t4gd86gaR347U'
+    wxusers.push 'omi6rv4L1PpGVzXZ6bguxvCmQGz8'
+    wxusers.push 'omi6rv22M6o0lAkoeGlzohvZhlmc'
+    step =0
+    10.times do
+      step +=1
+      wxusers.each do |wxuser|
+        touser=wxuser
+        template_id='Us_mRiu93r0uDFVG3T3VDcR1bwSB--AzOCTXrp-7hqA'
+        url='http://weixin.qq.com/download'
+        topcolor='#173177'
+        data={
+            "first": {
+                "value":"您有新的订单",
+                "color":"#173177"
+            },
+            "keyword1":{
+                "value":'test'
+            },
+            "keyword2": {
+                "value":'test'
+            },
+            "remark":{
+                "value":'这是第'+step.to_s+'条测试信息'
+            }
+        }
+        send_pay_success(touser,template_id,url,topcolor,data)#厂家订单消息
+      end
+    end
+    render json: params[:callback]+'({"status":"1"})',content_type: "application/javascript"
+  end
+
+
 
 
 

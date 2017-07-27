@@ -19,7 +19,9 @@
         </tr>
         </thead>
         <tbody>
+        <% count =0 %>
         <% @pacts.each do |pact| %>
+        <% count +=1 %>
             <tr>
               <td>
 
@@ -78,7 +80,21 @@
         </tbody>
       </table>
 
-      <br>
+      <div class="text-center">
+        <table align="center">
+          <tr>
+            <td>
+              记录数：<%= count %>
+              &nbsp;/&nbsp;
+              <%= @pactcount %>&nbsp;&nbsp;&nbsp;&nbsp;
+            </td>
+
+            <td>
+              <%= will_paginate @busines, renderer: BootstrapPagination::Rails %>
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
   </div>
 </div>

@@ -17,7 +17,9 @@
         </tr>
         </thead>
         <tbody>
+        <% profitsum = 0 %>
         <% @profits.each do |profit| %>
+        <% profitsum += profit.profit %>
             <tr>
               <td><%= profit.dgt %></td>
               <td><%= profit.product %></td>
@@ -28,7 +30,21 @@
         <% end %>
         </tbody>
       </table>
-      <br>
+      <div class="text-center" data-turbolinks="false">
+        <table align="center">
+          <tr>
+            <td>
+              利润：<%= profitsum.round(2) %>
+              &nbsp;/&nbsp;
+              <%= @profitsum.round(2) %>&nbsp;&nbsp;&nbsp;&nbsp;
+            </td>
+
+            <td>
+              <%= will_paginate @useramounts, renderer: BootstrapPagination::Rails %>
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
   </div>
 </div>

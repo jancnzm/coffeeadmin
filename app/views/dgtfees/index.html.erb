@@ -47,14 +47,24 @@
         </tbody>
       </table>
 
-      <div class="col-lg-12">
-        <span class="pull-right"><strong>
-        小计：<%= amountsum %>&nbsp;&nbsp;合计：<%= @dgtfeesum %>
-        </strong>
-            </span>
-      </div>
 
-      <br>
+
+
+      <div class="text-center">
+        <table align="center">
+          <tr>
+            <td>
+              入账金额：<%= amountsum %>
+              &nbsp;/&nbsp;
+              <%= @dgtfeesum %>&nbsp;&nbsp;&nbsp;&nbsp;
+            </td>
+
+            <td>
+              <%= will_paginate @busines, renderer: BootstrapPagination::Rails %>
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
   </div>
 </div>

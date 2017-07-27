@@ -17,7 +17,7 @@ class WxpaymentsController < ApplicationController
       step=step+1
     end
     payment_params = {
-        body: "云南咖啡",
+        body: "云南小粒咖啡",
         out_trade_no: order_sn,
         # 单位是 分, 所以要 乘以 100
         #total_fee: (fee.to_f * 100).to_i,
@@ -38,6 +38,7 @@ class WxpaymentsController < ApplicationController
 
     #followers = $client.followers
     #user_info = $client.user("omi6rv6zuFj5cc1t4gd86gaR347U")
+    #Testlog.create(log:request.url)
     @sign_package = $client.get_jssign_package(request.url)
 
     if @result.nil?
@@ -65,9 +66,9 @@ class WxpaymentsController < ApplicationController
 
   # 这个是支付完之后的回调函数.
   def notify
-    #Testlog.create(log:'notify')
     result = Hash.from_xml(request.body.read)["xml"]
     if result['return_code']=='SUCCESS'
+      commissionuserid=0
       profitdgt=''#厂商名称
       profitproduct=''#产品名称
       profitnumber=0#产品数量
@@ -76,6 +77,7 @@ class WxpaymentsController < ApplicationController
       profitcost=0.0#成本
       profitbusine=0.0#业务分成
       order_sn=result['out_trade_no']
+      #order_sn='2017062218114328'
       buycar=Buycar.find_by_ordernumber(order_sn)
       orders=buycar.orders
       dgt_id_count=Array.new
@@ -99,7 +101,8 @@ class WxpaymentsController < ApplicationController
           pact=pact.first
           if pact != nil
             user=pact.user
-            user.balance=user.balance+f.number*product.businepro
+            commissionuserid = user.id
+            user.balance=user.balance.to_f+f.number*product.businepro
             user.save
             useramount=user.useramounts
             useramount.create(amount:f.number*product.businepro,content:'商家购买商品')
@@ -112,6 +115,10 @@ class WxpaymentsController < ApplicationController
 
       buycar.status=1
       buycar.save
+      commission(buycar.amount,commissionuserid)
+
+      activity(order_sn)
+      attchproduct(order_sn)
 
       dgt_id_count.uniq!
       wxuser=Wxuser.all
@@ -174,6 +181,119 @@ class WxpaymentsController < ApplicationController
     end
   end
 
+  def manualnotify
+    #result = Hash.from_xml(request.body.read)["xml"]
+    #if result['return_code']=='SUCCESS'
+      profitdgt=''#厂商名称
+      profitproduct=''#产品名称
+      profitnumber=0#产品数量
+      profitprice=0.0#产品单价
+      profit=0.0#利润
+      profitcost=0.0#成本
+      profitbusine=0.0#业务分成
+      #order_sn=result['out_trade_no']
+      order_sn=params[:ordernumber]
+      buycar=Buycar.find_by_ordernumber(order_sn)
+      orders=buycar.orders
+      dgt_id_count=Array.new
+      userprofitsum=0
+      orders.each do |f|
+        if f.status ==0
+          f.status=1
+          f.save
+          product=Product.find(f.product_id)
+          profitproduct=product.name
+          profitprice=product.price
+          dgt=product.dgt
+          dgt_id_count.push dgt.id
+          profitdgt=dgt.name
+          dgtfees=dgt.dgtfees
+          dgtfees.create(amount:f.number*product.dgtpro)
+          profitnumber=f.number
+          profitcost=f.number*product.dgtpro
+          pact=Pact.where('busine_id=?',f.busine_id)
+          pact=pact.where('begindate<=? and enddate>=?',f.created_at,f.created_at)
+          pact=pact.first
+          if pact != nil
+            user=pact.user
+            user.balance=user.balance+f.number*product.businepro
+            user.save
+            useramount=user.useramounts
+            useramount.create(amount:f.number*product.businepro,content:'商家购买商品')
+            profitbusine=f.number*product.businepro
+          end
+          profit=profitprice*profitnumber-profitcost-profitbusine
+          Profit.create(dgt:profitdgt,product:profitproduct,number:profitnumber,profit:profit)
+        end
+      end
+
+      buycar.status=1
+      buycar.save
+
+      activity(order_sn)
+      attchproduct(order_sn)
+
+      dgt_id_count.uniq!
+      wxuser=Wxuser.all
+      dgt_id_count.each do |f|
+        wxuser.each do |wxuser|
+          if wxuser.dgt_id == f
+            touser=wxuser.openid
+            template_id='Us_mRiu93r0uDFVG3T3VDcR1bwSB--AzOCTXrp-7hqA'
+            url='http://weixin.qq.com/download'
+            topcolor='#173177'
+            data={
+                "first": {
+                    "value":"您有新的订单",
+                    "color":"#173177"
+                },
+                "keyword1":{
+                    "value":buycar.ordernumber
+                },
+                "keyword2": {
+                    "value":buycar.updated_at.strftime('%Y-%m-%d %H:%M:%S')
+                },
+                "remark":{
+                    "value":buycar.remark
+                }
+            }
+            send_pay_success(touser,template_id,url,topcolor,data)#厂家订单消息
+          end
+        end
+      end
+
+
+      touser=buycar.openid
+      template_id='EJ26NpZZxuva6zLWrQMmZS64861_pEmNHtf2Ak8Zkco'
+      url='http://weixin.qq.com/download'
+      topcolor='#173177'
+      data={
+          "first": {
+              "value":"您好，您的订单已付款成功",
+              "color":"#173177"
+          },
+          "keyword1":{
+              "value":buycar.ordernumber
+          },
+          "keyword2": {
+              "value":buycar.updated_at.strftime('%Y-%m-%d %H:%M:%S')
+          },
+          "keyword3": {
+              "value":buycar.amount.to_s+'元'
+          },
+          "keyword4": {
+              "value":"微信支付"
+          },
+          "remark":{
+              "value":"感谢您的惠顾"
+          }
+      }
+      send_pay_success(touser,template_id,url,topcolor,data)#支付成功消息
+
+      render :xml => {return_code: "SUCCESS"}.to_xml(root: 'xml', dasherize: false)
+    #end
+  end
+
   def payuser
     nonce=SecureRandom.uuid.tr('-', '')
     #nonce='123456789'
@@ -181,12 +301,12 @@ class WxpaymentsController < ApplicationController
     payment_params={
 
 nonce_str:nonce,
-        partner_trade_no:'2017044554433345181207',
-        openid:'oU58FxAQdyuhVipFpADlkkMlZUDU',
+        partner_trade_no:'2017044554433345181212',
+        openid:'omi6rv6zuFj5cc1t4gd86gaR347U',
         check_name:'NO_CHECK',
         amount:100,
-        desc:'posan',
-        spbill_create_ip:'100.77.128.249'
+        desc:'销售业务管理服务分润',
+        spbill_create_ip:'127.0.0.1'
     }
 
     #payment_params=payment_params.to_s
@@ -194,7 +314,13 @@ nonce_str:nonce,
 
 
     @result = WxPay::Service.invoke_transfer(payment_params)
-    debugger
+    #debugger
+    if @result["result_code"]=="SUCCESS"
+      render json: params[:callback]+'({"status":"1"})',content_type: "application/javascript"
+    else
+      render json: params[:callback]+'({"status":"0"})',content_type: "application/javascript"
+    end
+    #debugger
 
   end
 
