@@ -39,10 +39,15 @@ class ApisController < ApplicationController
       elsif user.status == 0
         code =203
       end
+      if params[:openid] != ''
+        user.openid = params[:openid]
+        user.save
+      end
+      withdraw = user.withdraws
     else
       code=201
     end
-    render json: params[:callback]+'({"code":"'+code.to_s+'",user:'+user.to_json+'})',content_type: "application/javascript"
+    render json: params[:callback]+'({"code":"'+code.to_s+'",user:'+user.to_json+',withdraw:'+withdraw.to_json+'})',content_type: "application/javascript"
   end
 
   def pactnumber
@@ -127,6 +132,10 @@ class ApisController < ApplicationController
 
   def pact
     busine=Busine.create(name:params[:bussname],address:params[:bussaddress],province:params[:province],city:params[:city],districe:params[:district],contact:params[:contact],contactphone:params[:contactphone],buessphone:params[:bussphone])
+    busineatts = busine.busineatts
+    if params[:tuopan].to_i > 0
+      busineatts.create(taobei:params[:taobei],tuopan:params[:toupan],type:0)
+    end
     pact=Pact.create(busine_id:busine.id,user_id:params[:userid],number:params[:pactnumber],begindate:DateTime.parse(params[:begindate]),enddate:DateTime.parse(params[:enddate]),status:-1)
     attchproducts=pact.attchproducts
     if params[:taobei].to_i >0
@@ -303,6 +312,9 @@ class ApisController < ApplicationController
 
   def setpwd
     userpwd =User.find(params[:userid]).userpwds
+    userpwd.each do |f|
+      f.destroy
+    end
     userpwd.create(password_confirmation:params[:pwd], password:params[:pwd])
     render json: params[:callback]+'({"status":"1"})',content_type: "application/javascript"
   end
@@ -373,8 +385,8 @@ class ApisController < ApplicationController
       if order.created_at >= pact.begindate && order.created_at <= pact.enddate
         buycar = order.buycar
         if buycar.status == 1
-        buycar_id_arr.push buycar.id
-          end
+          buycar_id_arr.push buycar.id
+        end
       end
     end
     buycar_id_arr.uniq!
@@ -395,7 +407,7 @@ class ApisController < ApplicationController
       delcode.destroy
     end
     if params[:userid]
-singlecode=''
+      singlecode=''
       8.times do |f|
         singlecode +=rand(10).to_s
       end
@@ -454,6 +466,15 @@ singlecode=''
     user = User.find(params[:userid]).order('id desc')
     commissions = user.commissions
     render json: params[:callback]+'({"commission":' + commissions.to_json + '})',content_type: "application/javascript"
+  end
+
+  def checkwithdrawcode
+    user=User.find(params[:userid])
+    if user.withdrawcode == params[:code] && user.withdrawcodetime + 5.minutes > Time.now
+      render json: params[:callback]+'({"status":"1"})',content_type: "application/javascript"
+    else
+      render json: params[:callback]+'({"status":"0"})',content_type: "application/javascript"
+    end
   end
 
   def sendtest

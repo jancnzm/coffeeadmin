@@ -1,0 +1,100 @@
+<script>
+
+    $(document).ready(function(){
+        $('#init_busine_pinyin').click(function(){
+            $.ajax({
+                async : false,
+                url : "settings/init_busine_pinyin",
+                type : "GET",
+                dataType : 'json',
+                timeout : 5000,
+                success : function(jsonstr) {// 客户端jquery预先定义好的callback函数,成功获取跨域服务器上的json数据后,会动态执行这个callback函数
+
+                },
+                error : function(xhr) {
+                    justep.Util.hint("错误，请检查网络");
+                }
+            });
+        }) ;
+
+        $('#cupratiobutton').click(function(){
+            if($('#cupratiobutton').text()=="修改")
+            {
+                $('#cupratiobutton').text("保存");
+                $('#cupratioinput').attr("readonly",false);
+            }else{
+                $('#cupratiobutton').text("修改");
+                $('#cupratioinput').attr("readonly",true);
+                $.ajax({
+                    async : false,
+                    url : "settings/changecupratio",
+                    type : "GET",
+                    dataType : 'json',
+                    data:{
+                        cupratio:  $('#cupratioinput').val()
+                    },
+                    timeout : 5000,
+                    success : function(jsonstr) {// 客户端jquery预先定义好的callback函数,成功获取跨域服务器上的json数据后,会动态执行这个callback函数
+                        $('#cupratioinput').val(jsonstr.cupratio);
+                    },
+                    error : function(xhr) {
+                        justep.Util.hint("错误，请检查网络");
+                    }
+                });
+            }
+
+        });
+
+    });
+</script>
+<%= render 'layerbegin' %>
+<div class="col-lg-12">
+  <div class="ibox float-e-margins">
+    <div class="ibox-title">
+      <h3>系统设置</h3>
+    </div>
+    <div class="ibox-content">
+      <div class="project-list">
+
+        <table class="table table-hover">
+          <tbody>
+          <tr>
+            <td class="project-title">
+              <h4>初始化商家首拼</h4>
+              <small>该操作将商家首字母拼音全部重置，用于商家首字母拼音的检索</small>
+            </td>
+            <td></td>
+            <td class="project-actions">
+              <button class="btn btn-w-m btn-primary" id="init_busine_pinyin">初始化</button>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="project-title">
+              <h4>购买价与套杯比率</h4>
+              <small>商家签订合同后，首次购买咖啡产品的价格比率为套杯数量×混算比率</small>
+            </td>
+            <td class="project-completion">
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label" style="margin-top: 10px;">混算比率：</label>
+                <div class="col-sm-5">
+                  <input type="text" class="form-control" value=<%= @setting.cupratio %> readonly="true" id="cupratioinput">
+                </div>
+              </div>
+
+            </td>
+            <td class="project-actions">
+              <button class="btn btn-w-m btn-primary" id="cupratiobutton">修改</button>
+            </td>
+          </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+      <br>
+    </div>
+  </div>
+</div>
+<%=render 'layerend' %>

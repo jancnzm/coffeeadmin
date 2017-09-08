@@ -19,7 +19,9 @@
         </tr>
         </thead>
         <tbody>
+        <% count =0 %>
         <% @buycars.each do |buycar| %>
+            <% count +=1 %>
             <tr>
               <td>
                 <% order=buycar.orders.first %>
@@ -66,7 +68,20 @@
         <% end %>
         </tbody>
       </table>
+      <div class="text-center">
+        <table align="center">
+          <tr>
+            <td>
+              记录数：<%= count %>
+              &nbsp;
+            </td>
 
+            <td>
+              <%= will_paginate @buycars, renderer: BootstrapPagination::Rails %>
+            </td>
+          </tr>
+        </table>
+      </div>
       <br>
     </div>
   </div>

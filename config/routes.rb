@@ -33,6 +33,7 @@ Rails.application.routes.draw do
       get 'test'
       get 'sendtest'
       get 'getcommission'
+      get 'checkwithdrawcode'
     end
   end
   resources :idcards
@@ -89,4 +90,21 @@ end
 resources :userinoutcounts do
 
 end
+  resources :sendsms do
+    collection do
+      get 'sendvcode'
+    end
+  end
+  resources :apiv2 do
+    collection do
+      get 'getseller'
+      get 'getsellersearch'
+    end
+  end
+  resources :settings do
+    collection do
+      get 'init_busine_pinyin'
+      get 'changecupratio'
+    end
+  end
 end

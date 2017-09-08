@@ -2,7 +2,7 @@ class DgtordersController < ApplicationController
   before_action :set_buycar, only: [:show, :edit, :update, :destroy]
 def index
 
-  @buycars=Buycar.where('status != 0 and amount >0')
+  @buycars=Buycar.where('status != 0 and amount >0').paginate(:page => params[:page], :per_page => 20).order("id desc")
   if session[:dgtid].to_i >0
     dgt=Dgt.find(session[:dgtid])
     products=dgt.products
@@ -16,7 +16,7 @@ def index
       ordersarr.push order.buycar_id
     end
     ordersarr.uniq!
-    @buycars=Buycar.where('id in (?) and status !=0 and amount >0',ordersarr)
+    @buycars=Buycar.where('id in (?) and status !=0 and amount >0',ordersarr).paginate(:page => params[:page], :per_page => 20).order("id desc")
 
   end
   @busines=Busine.all

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170704023109) do
+ActiveRecord::Schema.define(version: 20170907160359) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "username"
@@ -54,6 +54,15 @@ ActiveRecord::Schema.define(version: 20170704023109) do
     t.integer  "busine_id"
   end
 
+  create_table "busineatts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "busine_id"
+    t.integer  "taobei"
+    t.integer  "tuopan"
+    t.integer  "type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "busines", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "name"
     t.string   "address"
@@ -66,6 +75,7 @@ ActiveRecord::Schema.define(version: 20170704023109) do
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
     t.integer  "busine_id"
+    t.string   "pinyin"
   end
 
   create_table "buycars", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -228,6 +238,12 @@ ActiveRecord::Schema.define(version: 20170704023109) do
     t.datetime "updated_at",            null: false
   end
 
+  create_table "settings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.float    "cupratio",   limit: 24
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+  end
+
   create_table "testlogs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.text     "log",        limit: 65535
     t.datetime "created_at",               null: false
@@ -285,6 +301,9 @@ ActiveRecord::Schema.define(version: 20170704023109) do
     t.integer  "status"
     t.string   "userpwd_digest"
     t.integer  "up_id"
+    t.string   "withdrawcode"
+    t.datetime "withdrawcodetime"
+    t.string   "openid"
   end
 
   create_table "withdraws", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

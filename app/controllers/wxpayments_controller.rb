@@ -295,17 +295,21 @@ class WxpaymentsController < ApplicationController
   end
 
   def payuser
+    openid=params[:openid]
+    userid=params[:userid]
+    amount= (params[:withdraw].to_f * 100).to_i
     nonce=SecureRandom.uuid.tr('-', '')
+    ordernumber=params[:ordernumber]
     #nonce='123456789'
     #mykey =WxPay.key
     payment_params={
 
 nonce_str:nonce,
-        partner_trade_no:'2017044554433345181212',
-        openid:'omi6rv6zuFj5cc1t4gd86gaR347U',
+        partner_trade_no:ordernumber,
+        openid:openid,
         check_name:'NO_CHECK',
-        amount:100,
-        desc:'销售业务管理服务分润',
+        amount:amount,
+        desc:'付款',
         spbill_create_ip:'127.0.0.1'
     }
 
@@ -316,7 +320,9 @@ nonce_str:nonce,
     @result = WxPay::Service.invoke_transfer(payment_params)
     #debugger
     if @result["result_code"]=="SUCCESS"
-      render json: params[:callback]+'({"status":"1"})',content_type: "application/javascript"
+      withdraws = User.find(userid).withdraws
+      withdraws.create(withdraw:params[:withdraw].to_f,user_id:userid)
+      render json: params[:callback]+'({"status":"1","withdraw":'+withdraws.to_json+'})',content_type: "application/javascript"
     else
       render json: params[:callback]+'({"status":"0"})',content_type: "application/javascript"
     end
