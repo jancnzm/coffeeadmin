@@ -132,10 +132,10 @@ class ApisController < ApplicationController
 
   def pact
     busine=Busine.create(name:params[:bussname],address:params[:bussaddress],province:params[:province],city:params[:city],districe:params[:district],contact:params[:contact],contactphone:params[:contactphone],buessphone:params[:bussphone])
-    busineatts = busine.busineatts
-    if params[:tuopan].to_i > 0
-      busineatts.create(taobei:params[:taobei],tuopan:params[:toupan],type:0)
-    end
+    #busineatts = busine.busineatts
+    #if params[:tuopan].to_i > 0
+    #  busineatts.create(taobei:params[:taobei],tuopan:params[:toupan],type:0)
+    #end
     pact=Pact.create(busine_id:busine.id,user_id:params[:userid],number:params[:pactnumber],begindate:DateTime.parse(params[:begindate]),enddate:DateTime.parse(params[:enddate]),status:-1)
     attchproducts=pact.attchproducts
     if params[:taobei].to_i >0
@@ -161,7 +161,7 @@ class ApisController < ApplicationController
         end
       end
     end
-    busine=Busine.all.order('id desc')
+    busine=Busine.all.order('id desc').paginate(:page => params[:page], :per_page => 10).order("id desc")
     render json: params[:callback]+'({"seller":' + busine.to_json + '})',content_type: "application/javascript"
   end
 

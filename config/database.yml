@@ -50,5 +50,5 @@ test:
 production:
   <<: *default
   database: coffeeadmin_production
-  username: coffeeadmin
-  password: <%= ENV['COFFEEADMIN_DATABASE_PASSWORD'] %>
+  username: root
+  password: 1
