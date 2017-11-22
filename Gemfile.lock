@@ -40,6 +40,7 @@ GEM
       tzinfo (~> 1.1)
     arel (7.1.4)
     bcrypt (3.1.10)
+    bootstrap-switch-rails (3.3.3)
     builder (3.2.3)
     byebug (9.0.6)
     carrierwave (1.0.0)
@@ -226,6 +227,7 @@ PLATFORMS
 
 DEPENDENCIES
   bcrypt (~> 3.1.7)
+  bootstrap-switch-rails
   byebug
   china_pay
   coffee-rails (~> 4.2)

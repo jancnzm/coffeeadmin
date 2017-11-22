@@ -35,5 +35,7 @@
 //= require jquery.PrintArea.js
 //= require plugins/fancybox/jquery.fancybox.js
 //= require plugins/echarts/echarts-all.js
+//= require bootstrap-switch
+//= require jquery.jqprint-0.3.js
 
 

@@ -34,6 +34,8 @@ Rails.application.routes.draw do
       get 'sendtest'
       get 'getcommission'
       get 'checkwithdrawcode'
+      get 'getinvoice'
+      get 'setinvoice'
     end
   end
   resources :idcards
@@ -50,7 +52,9 @@ Rails.application.routes.draw do
     end
   end
   resources :getopenids
-  resources :dgts
+  resources :dgts do
+    resources :ecas
+  end
   resources :products
   resources :orders
   resources :profits
@@ -60,6 +64,8 @@ Rails.application.routes.draw do
     collection do
       get 'sends'
       get 'deldeliveorders'
+      get 'setinvoicestatus'
+      get 'print'
     end
 
   end

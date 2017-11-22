@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  dgt_id: 1
+  name: MyString
+  phone: MyString
+  openid: MyString
+
+two:
+  dgt_id: 1
+  name: MyString
+  phone: MyString
+  openid: MyString

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170907160359) do
+ActiveRecord::Schema.define(version: 20171017084338) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "username"
@@ -84,11 +84,12 @@ ActiveRecord::Schema.define(version: 20170907160359) do
     t.string   "phone"
     t.string   "address"
     t.string   "remark"
-    t.float    "amount",      limit: 24
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.float    "amount",        limit: 24
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
     t.string   "openid"
     t.integer  "status"
+    t.integer  "invoicestatus"
   end
 
   create_table "commissions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -129,6 +130,15 @@ ActiveRecord::Schema.define(version: 20170907160359) do
     t.datetime "updated_at",            null: false
     t.float    "amount",     limit: 24
     t.float    "amountsub",  limit: 24
+  end
+
+  create_table "ecas", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "dgt_id"
+    t.string   "name"
+    t.string   "phone"
+    t.string   "openid"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "giveawaybusines", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -182,6 +192,21 @@ ActiveRecord::Schema.define(version: 20170907160359) do
     t.datetime "updated_at",  null: false
     t.integer  "status"
     t.datetime "invalidtime"
+  end
+
+  create_table "invoices", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "name"
+    t.string   "tax"
+    t.string   "address"
+    t.string   "tel"
+    t.string   "bankdeposit"
+    t.string   "bankaccount"
+    t.integer  "busine_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.string   "personal"
+    t.integer  "itype"
+    t.integer  "invoicetype"
   end
 
   create_table "orders", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

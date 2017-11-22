@@ -49,6 +49,31 @@ end
 
   end
 
+  def print
+    @buycar=Buycar.find(params[:id])
+    @dgts=Dgt.all
+    @delives=Delive.all
+
+    order=@buycar.orders.first
+    busine=Busine.find(order.busine_id)
+    pacts=busine.pacts.where('begindate <=? and enddate >= ?',@buycar.created_at,@buycar.created_at)
+    if pacts.count > 0
+      @user=pacts.first.user
+    end
+    #debugger
+    #busine=@buycar.busine
+    #debugger
+    #pacts=busine.pact
+    @attchorders=@buycar.attchorders
+
+    if session[:dgtid].to_i>0
+      @deliveorders=@buycar.deliveorders.where('dgt_id=?',session[:dgtid])
+
+    else
+      @deliveorders=@buycar.deliveorders
+    end
+  end
+
 def update
   respond_to do |format|
     if @buycar.update(buycar_params)
@@ -115,6 +140,14 @@ dgt =Dgt.find(session[:dgtid])
     deliveorder=Deliveorder.find(params[:format])
     deliveorder.destroy
 
+  end
+
+  def setinvoicestatus
+    @buycar=Buycar.find(params[:busineid])
+      @buycar.invoicestatus = params[:status].to_i
+    @buycar.save
+
+    render json: '{"status":"1"}'
   end
 
 private

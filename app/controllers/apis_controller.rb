@@ -477,6 +477,36 @@ class ApisController < ApplicationController
     end
   end
 
+  def getinvoice
+    status = 0
+    busine = Busine.find(params[:busineid])
+    invoice = busine.invoices.first
+    if invoice
+      status = 1
+    end
+    render json: params[:callback]+'({"status":"'+status.to_s+'",invoice:'+invoice.to_json+'})',content_type: "application/javascript"
+  end
+
+  def setinvoice
+    buycar = Buycar.find_by_ordernumber(params[:ordersn])
+    buycar.invoicestatus = 1
+    buycar.save
+
+    busine= Busine.find(params[:busineid])
+    invoice = busine.invoices
+    if invoice.count > 0
+      invoice.each do |del|
+        del.destroy
+      end
+    end
+    type = 0
+    if params[:type] == '1'
+      type = 1
+    end
+    invoice.create(name:params[:name],tax:params[:tax],address:params[:address],tel:params[:tel],bankdeposit:params[:bankdeposit],bankaccount:params[:bankaccount],personal:params[:personal],itype:type)
+    render json: params[:callback]+'({"status":"1"})',content_type: "application/javascript"
+  end
+
   def sendtest
     wxusers=Array.new
     wxusers.push 'omi6rv6zuFj5cc1t4gd86gaR347U'
@@ -510,6 +540,7 @@ class ApisController < ApplicationController
     end
     render json: params[:callback]+'({"status":"1"})',content_type: "application/javascript"
   end
+
 
 
 

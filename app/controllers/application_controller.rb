@@ -105,6 +105,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def paytoenterprise(buycarorder)
+
+  end
+
 
 
 end

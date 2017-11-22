@@ -17,6 +17,7 @@ gem 'rails_kindeditor'
 gem 'will_paginate-bootstrap'
 gem 'kaminari'
 gem 'hanzi_to_pinyin', require: 'hanzi_to_pinyin'
+gem "bootstrap-switch-rails"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.2'
 # Use mysql as the database for Active Record

@@ -1,0 +1,453 @@
+<style>
+    .onoffswitch-inner:before {
+        content: "已开";
+        padding-left: 10px;
+        background-color: #1ab394;
+        color: #FFFFFF;
+    }
+    .onoffswitch-inner:after {
+        content: "未开";
+        padding-right: 10px;
+        background-color: #FFFFFF;
+        color: red;
+        text-align: right;
+    }
+
+        .displaynone{
+            display: none;
+        }
+        .displayshow{
+            display: block;
+        }
+</style>
+
+<script>
+    $(document).ready(function(){
+
+        if(getUrlParam('print')){
+            //$('#deliveoid').addClass('displaynone');
+            $("div#PrintArea").printArea();
+        }
+
+        $('#print').click(function(){
+
+            //$("div#PrintArea").printArea();
+            var url;
+            if(!getUrlParam('print')) {
+            url = window.location.href+'?print=true';
+            }
+            else
+            {
+                url = window.location.href;
+            }
+            //location.href = url;
+
+                location.href = url;
+
+        });
+
+        $('#selectdelive').change(function(){
+            $('#deliveInput').val($('#selectdelive').val());
+        });
+
+        $('#send').click(function(){
+            $.ajax({
+                type: "GET",
+                url: "../../dgtorders/sends",
+                data: {delive:$("#deliveInput").val(), ordernumber:$("#deliveorderInput").val(),buycarid:$("#buycarid").val()},
+                dataType: "json",
+                success: function(data){
+                    location.reload();
+                }
+            });
+        });
+
+
+
+        $("#example1").on('click', function(){
+            clickSwitch()
+        });
+
+        if($('#invoiceid').val()=='1'){
+            $('#example1').attr('checked',false);
+        }else{
+            $('#example1').attr('checked',true);
+        }
+
+        var clickSwitch = function() {
+            var status=0;
+            if ($("#example1").is(':checked')) {
+                status=2;
+
+
+
+            } else {
+                status=1;
+
+            }
+            $.ajax({
+                type: "GET",
+                url: "../../dgtorders/setinvoicestatus",
+                data: {status:status,busineid:$('#buycarid').val()},
+                dataType: "json",
+                success: function(data){
+
+                }
+            });
+        };
+        //var url =window.location.href;
+
+
+
+        //$("div#PrintArea").printArea();
+
+
+    });
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return unescape(r[2]); return null; //返回参数值
+    }
+</script>
+
+<div class="col-lg-12">
+  <div class="ibox float-e-margins">
+    <div class="ibox-title">
+      <div class="col-md-6">
+        <h3>订单明细</h3>
+
+      </div>
+      <div class="col-md-6">
+        <button id="print" class="btn btn-w-m btn-primary pull-right" style="margin-top:-8px;">打印</button>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<input type="hidden" value=<%= @buycar.id %> id='buycarid'>
+<input type="hidden" value=<%= @buycar.invoicestatus %> id='invoiceid'>
+
+
+<div class="wrapper wrapper-content p-xl" >
+  <div class="ibox-content p-xl" id="PrintArea">
+    <div class="row">
+      <div class="col-sm-12">
+        <span>订单号：</span>
+        <span class="text-navy"><%= @buycar.ordernumber %></span>
+        <hr style="margin-top:0px;">
+      </div>
+    </div>
+
+
+
+    <div class="row">
+      <div class="col-sm-6 text-left">
+        <% order=@buycar.orders.first %>
+        <% busine=Busine.find(order.busine_id) %>
+        <label style="width: 100px;">商家名称</label><span><%= busine.name %></span>
+      </div>
+      <div class="col-sm-6 text-left">
+        <label style="width: 100px;">联系人</label><span><%= @buycar.name %></span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6 text-left">
+        <label style="width: 100px;">联系电话</label><span><%= @buycar.phone %></span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12 text-left">
+        <label style="width: 100px;">地址</label><span><%= @buycar.address %></span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 text-left">
+        <label style="width: 100px;">备注</label><span><%= @buycar.remark %></span>
+      </div>
+    </div>
+
+
+    <div class="table-responsive m-t">
+      <table class="table invoice-table">
+        <thead>
+        <tr>
+          <th>清单</th>
+
+          <th>单位</th>
+          <th>规格</th>
+          <th>数量</th>
+          <th>单价</th>
+          <th>总价</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% orders=@buycar.orders %>
+        <% sum=0.0 %>
+        <% orders.each do |order| %>
+            <% product=Product.where('id=?',order.product_id) %>
+            <% dgt=product.first.dgt %>
+            <% if dgt.id == session[:dgtid].to_i || session[:dgtid].to_i == 0 %>
+                <tr>
+                  <td>
+                    <div><strong><%= product.first.name %></strong>
+                    </div>
+                  </td>
+                  <td>
+                    <%= product.first.unit %>
+                  </td>
+                  <td>
+                    <%= product.first.spec %>
+                  </td>
+                  <td><%= order.number %></td>
+                  <td>&yen;&nbsp;<%= product.first.price %></td>
+
+                  <td>&yen;&nbsp;<%= order.paymentamount %></td>
+                </tr>
+
+
+                <% sum=sum+order.paymentamount %>
+            <% end %>
+        <% end %>
+
+        </tbody>
+      </table>
+    </div>
+
+
+    <table class="table invoice-total">
+      <tbody>
+      <tr>
+        <td><strong>合计：</strong>
+        </td>
+        <td>&yen;&nbsp;<%= sum %></td>
+      </tr>
+      </tbody>
+    </table>
+
+    <br>
+
+    <% dgt=nil %>
+    <% if session[:dgtid].to_i > 0 %>
+        <% dgt=Dgt.find(session[:dgtid]) %>
+    <% end %>
+    <% if session[:dgtid].to_i == 0 || dgt.name.include?('景兰') %>
+        <div class="table-responsive m-t">
+          <table class="table invoice-table">
+            <thead>
+            <tr>
+              <th>咖啡瓷套杯清单</th>
+
+              <th>数量</th>
+
+            </tr>
+            </thead>
+            <tbody>
+
+
+
+
+            <% @attchorders.each do |attchorder| %>
+                <tr>
+                  <td>
+                    <strong><%= attchorder.name %></strong>
+                  </td>
+                  <td>
+                    <%= attchorder.number %>
+                  </td>
+
+                </tr>
+            <% end %>
+
+            </tbody>
+          </table>
+        </div>
+    <% end %>
+    <!-- /table-responsive -->
+    <br>
+    <div class="row">
+      <div class="col-sm-12">
+        <span>开票信息：</span>
+        <span class="text-navy">
+          <% if @buycar.invoicestatus.to_s == '' %>
+          不需要
+              <% else %>
+          需要发票
+          <% end %>
+        </span>
+
+        <% if @buycar.invoicestatus.to_s !='' %>
+            <div class="switch pull-right">
+              <div class="onoffswitch">
+                <input type="checkbox" checked class="onoffswitch-checkbox" id="example1">
+                <label class="onoffswitch-label" for="example1">
+                  <span class="onoffswitch-inner" data-on="ON" data-off="OFF"></span>
+                  <span class="onoffswitch-switch"></span>
+                </label>
+              </div>
+            </div>
+        <% end %>
+
+        <hr style="margin-top:0px;">
+      </div>
+    </div>
+
+    <% if @buycar.invoicestatus.to_s != '' %>
+        <% busine = Busine.find(@buycar.orders.first.busine_id) %>
+        <% invoice = busine.invoices.first %>
+
+        <div class="row">
+          <div class="col-sm-6 text-left">
+            <label style="width: 100px;">开票类型</label><span>
+<% if invoice.itype == 0 %>
+        个人
+            <% else %>
+        单位
+        <% end %>
+
+      </span>
+          </div>
+        </div>
+    <% end %>
+
+    <% if @buycar.invoicestatus.to_s != '' %>
+        <% if invoice.itype == 0 %>
+            <div class="row">
+              <div class="col-sm-6 text-left">
+                <label style="width: 100px;">名称</label><span><%= invoice.personal %></span>
+              </div>
+            </div>
+        <% else %>
+            <div class="row">
+              <div class="col-sm-6 text-left">
+                <label style="width: 100px;">名称</label><span><%= invoice.name %></span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6 text-left">
+                <label style="width: 100px;">税号</label><span><%= invoice.tax %></span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6 text-left">
+                <label style="width: 100px;">单位地址</label><span><%= invoice.address %></span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6 text-left">
+                <label style="width: 100px;">电话号码</label><span><%= invoice.tel %></span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6 text-left">
+                <label style="width: 100px;">开户银行</label><span><%= invoice.bankdeposit %></span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6 text-left">
+                <label style="width: 100px;">银行账户</label><span><%= invoice.bankaccount %></span>
+              </div>
+            </div>
+        <% end %>
+    <% end %>
+
+
+    <p>&nbsp;</p>
+    <div class="row">
+      <div class="col-sm-12">
+        <span>物流信息</span>
+        <hr style="margin-top:0px;">
+      </div>
+    </div>
+
+
+
+    <div class="table-responsive m-t">
+      <table class="table invoice-table">
+        <thead>
+        <tr>
+          <th>厂商</th>
+          <th>快递公司</th>
+          <th>单号</th>
+          <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @deliveorders.each do |deliveorder| %>
+            <% dgt=Dgt.find(deliveorder.dgt_id) %>
+            <tr>
+              <td>
+                <strong><%=dgt.name %></strong>
+              </td>
+              <td><%= deliveorder.delive %></td>
+              <td><%= deliveorder.ordernumber %></td>
+              <td id="deliveoid"><%= link_to '删除', [deliveorder.buycar,deliveorder], method: :delete, data: { confirm: '确认删除?' } %></td>
+            </tr>
+        <% end %>
+
+
+        </tbody>
+      </table>
+    </div>
+
+
+
+
+    <% if session[:dgtid].to_i != 0 %>
+        <div class="ibox-content form-horizontal m-t">
+          <div class="form-group">
+            <%= form_for([@buycar, @buycar.deliveorders.build]) do |f| %>
+                <div class="form-group">
+                  <label class="col-sm-8 control-label">快递公司：</label>
+                  <div class="col-sm-4">
+                    <%= f.hidden_field :delive,class:'form-control',id:"deliveInput" %>
+                    <select class="form-control m-b" id="selectdelive">
+                      <option value=0>请选择快递</option>
+                      <% @delives.each do |delive| %>
+                          <option value=<%= delive.delive %> ><%= delive.delive %></option>
+                      <% end %>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-8 control-label">单号：</label>
+                  <div class="col-sm-4">
+                    <%= f.text_field :ordernumber,class:'form-control' %>
+                  </div>
+                </div>
+                <%= f.hidden_field :dgt_id,value:session[:dgtid] %>
+                <div class="form-group">
+                  <label class="col-sm-8 control-label"></label>
+                  <div class="col-sm-4 text-right">
+                    <%= f.submit '发货', class:"btn btn-w-m btn-primary" %>
+
+                  </div>
+                </div>
+            <% end %>
+
+          </div>
+        </div>
+        <div class="alert alert-danger"><strong>注意：</strong> 请仔细核对快递公司及发货订单号。
+        </div>
+    <% end %>
+
+
+    <hr style="margin-top:0px;margin-bottom: 5px;">
+
+    <% if @user %>
+        <div class="row">
+          <div class="col-sm-6 text-left">
+            <label style="width: 100px;">业务客服</label><span><%= @user.username %></span>
+          </div>
+          <div class="col-sm-6 text-left">
+            <label style="width: 100px;">业务客服电话</label><span><%= @user.login %></span>
+          </div>
+        </div>
+    <% end %>
+
+
+  </div>
+</div>

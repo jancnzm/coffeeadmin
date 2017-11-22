@@ -13,4 +13,11 @@
  *= require_tree .
  *= require_self
   *= require font-awesome
+
+ * for bootstrap3
+ *= require bootstrap3-switch
+
+
+
+
  */
