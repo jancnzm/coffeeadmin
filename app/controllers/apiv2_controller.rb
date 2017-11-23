@@ -16,5 +16,9 @@ class Apiv2Controller < ApplicationController
       render json:params[:callback]+'([])',content_type: "application/javascript"
     end
   end
+  def getselectseller
+    busines = Busine.where('name like ?','%' + params[:name] + '%')
+    render json:params[:callback]+'('+busines.to_json+')',content_type: "application/javascript"
+  end
 
 end

@@ -105,14 +105,13 @@ end
     collection do
       get 'getseller'
       get 'getsellersearch'
-      get 'getselectseller'
     end
   end
   resources :settings do
     collection do
       get 'init_busine_pinyin'
       get 'changecupratio'
-      
+      get 'getselectseller'
     end
   end
 end
